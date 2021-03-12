@@ -14,12 +14,12 @@ public class Splash_screen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
+        //delaying the next activity by 2 seconds
         new Handler().postDelayed(() -> {
             Intent in = new Intent(Splash_screen.this, MainActivity.class);
             startActivity(in);
             Animatoo.animateZoom(Splash_screen.this);
             finish();
-        }, 2000);
+        }, 1000);
     }
 }
