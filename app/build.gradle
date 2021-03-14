@@ -43,4 +43,5 @@ dependencies {
     implementation 'com.daimajia.androidanimations:library:2.4@aar'            //YoYo Animations
     implementation 'com.airbnb.android:lottie:3.4.2'                           //Lottie Animations
     implementation 'com.gauravk.bubblenavigation:bubblenavigation:1.0.7'       //bubble nav bar
+    implementation 'me.jahirfiquitiva:FABsMenu:1.1.4'                          //custom fab
 }

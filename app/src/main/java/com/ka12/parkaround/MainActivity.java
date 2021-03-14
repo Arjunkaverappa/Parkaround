@@ -1,5 +1,7 @@
 package com.ka12.parkaround;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -14,6 +16,7 @@ import com.gauravk.bubblenavigation.BubbleNavigationConstraintView;
 
 
 public class MainActivity extends AppCompatActivity {
+    public static final String MAP_TYPE = "com.ka12.parkaround.this_is_where_map_type_is_saved";
     LinearLayout frag;
     BubbleNavigationConstraintView bottombar;
 
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.hide();
 
-        //setting up bottom navigationbar
+        //setting up bottom navigationbar to the middle element
         bottombar.setCurrentActiveItem(1);
         //getting the maps fragment and setting it as default
         FragmentManager fm = getSupportFragmentManager();
@@ -55,7 +58,13 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         });
+    }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //resetting the map type preferences
+        SharedPreferences.Editor setMap = getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
+        setMap.putString("type", "normal").apply();
     }
 }

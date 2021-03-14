@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?><!-- https://github.com/jahirfiquitiva/FABsMenu  -->
+<jahirfiquitiva.libs.fabsmenu.FABsMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:fabs_menu_clickableOverlay="true"
+    app:fabs_menu_overlayColor="#4d000000"
+    app:layout_behavior="@string/fabs_menu_layout_behavior">
+    <!-- this is the main icon before inflation -->
+    <jahirfiquitiva.libs.fabsmenu.FABsMenu
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:clipChildren="false"
+        app:fab_expandDirection="down"
+        app:fab_labelsPosition="left"
+        app:fab_menuMargins="15dp"
+        app:fab_moreButtonBackgroundColor="#E3DDDD"
+        app:fab_moreButtonPlusIcon="@drawable/plus_icon"
+        app:fab_moreButtonSize="normal">
+
+        <!-- this is the main icon after inflation -->
+        <jahirfiquitiva.libs.fabsmenu.TitleFAB
+            android:id="@+id/normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/explore_icon"
+            app:fabSize="mini"
+            app:fab_enableTitleClick="true"
+            app:fab_title="Default mode"
+            app:rippleColor="@color/cardview_shadow_start_color" />
+
+        <jahirfiquitiva.libs.fabsmenu.TitleFAB
+            android:id="@+id/third_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/satellite_mode"
+            app:fabSize="mini"
+            app:fab_enableTitleClick="true"
+            app:fab_title="Satellite mode"
+            app:rippleColor="@color/cardview_shadow_start_color" />
+
+        <jahirfiquitiva.libs.fabsmenu.TitleFAB
+            android:id="@+id/second_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/terrain_mode"
+            app:fabSize="mini"
+            app:fab_enableTitleClick="true"
+            app:fab_title="Terrain mode"
+            app:rippleColor="@color/cardview_shadow_start_color" />
+
+        <jahirfiquitiva.libs.fabsmenu.TitleFAB
+            android:id="@+id/first_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:hapticFeedbackEnabled="true"
+            android:src="@drawable/explore_icon"
+            app:fabSize="mini"
+            app:fab_enableTitleClick="true"
+            app:fab_title="Hybrid mode"
+            app:rippleColor="@color/cardview_shadow_start_color" />
+
+    </jahirfiquitiva.libs.fabsmenu.FABsMenu>
+</jahirfiquitiva.libs.fabsmenu.FABsMenuLayout>
