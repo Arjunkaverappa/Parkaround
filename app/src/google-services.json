@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "819148029280",
+    "project_id": "parkaround-78d48",
+    "storage_bucket": "parkaround-78d48.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819148029280:android:713ea4a8840abe2429b205",
+        "android_client_info": {
+          "package_name": "com.ka12.parkaround"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "819148029280-q2bd5lqvtolbust1ej8t8h4rhjr57r8l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ka12.parkaround",
+            "certificate_hash": "9f17d2ac4a8588e364c3b596cda482d81af3becf"
+          }
+        },
+        {
+          "client_id": "819148029280-2rnre16a4soni912agq5t7b1mob9b987.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeWCQGVg-VCUXt7w0Ne3jKU_TAGYBnYQQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "819148029280-2rnre16a4soni912agq5t7b1mob9b987.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

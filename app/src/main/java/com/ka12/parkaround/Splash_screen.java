@@ -29,7 +29,7 @@ public class Splash_screen extends AppCompatActivity {
 
         //delaying the next activity by 2 seconds
         new Handler().postDelayed(() -> {
-            Intent in = new Intent(Splash_screen.this, MainActivity.class);
+            Intent in = new Intent(Splash_screen.this, login.class);
             startActivity(in);
             Animatoo.animateZoom(Splash_screen.this);
             finish();

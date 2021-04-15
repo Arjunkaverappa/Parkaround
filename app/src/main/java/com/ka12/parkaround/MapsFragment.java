@@ -20,6 +20,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Objects;
+
 import jahirfiquitiva.libs.fabsmenu.FABsMenu;
 import jahirfiquitiva.libs.fabsmenu.TitleFAB;
 
@@ -40,7 +42,7 @@ public class MapsFragment extends Fragment {
         public void onMapReady(GoogleMap googleMap) {
             //retrieving the maps activity
             //TODO : reset the preference while exiting the app
-            SharedPreferences get_map_type = getActivity().getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE);
+            SharedPreferences get_map_type = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE);
             switch (get_map_type.getString("type", "none")) {
                 case "satellite":
                     googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
@@ -61,7 +63,6 @@ public class MapsFragment extends Fragment {
     };
     RelativeLayout host_map;
     FABsMenu fab;
-    String map_type;
 
     @Nullable
     @Override
@@ -74,14 +75,14 @@ public class MapsFragment extends Fragment {
         TitleFAB satellite_mode = v.findViewById(R.id.third_icon);
         TitleFAB noraml = v.findViewById(R.id.normal);
         noraml.setOnClickListener(view -> {
-            SharedPreferences.Editor setMap = getActivity().getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
+            SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
             setMap.putString("type", "noramal").apply();
             FragmentManager fm = getActivity().getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.frag, new MapsFragment()).commit();
         });
         satellite_mode.setOnClickListener(view ->
                 {
-                    SharedPreferences.Editor setMap = getActivity().getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
+                    SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
                     setMap.putString("type", "satellite").apply();
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.beginTransaction().replace(R.id.frag, new MapsFragment()).commit();
@@ -89,20 +90,21 @@ public class MapsFragment extends Fragment {
         );
         terrian_mode.setOnClickListener(view ->
                 {
-                    SharedPreferences.Editor setMap = getActivity().getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
+                    SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
                     setMap.putString("type", "terrain").apply();
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.beginTransaction().replace(R.id.frag, new MapsFragment()).commit();
                 }
         );
         hybrid.setOnClickListener(view -> {
-            SharedPreferences.Editor setMap = getActivity().getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
+            SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
             setMap.putString("type", "hybrid").apply();
             FragmentManager fm = getActivity().getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.frag, new MapsFragment()).commit();        });
 
         return v;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

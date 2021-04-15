@@ -1,7 +1,5 @@
 package com.ka12.parkaround;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -27,14 +25,12 @@ public class MainActivity extends AppCompatActivity {
         bottombar = findViewById(R.id.bottombar);
         frag = findViewById(R.id.frag);
 
+        set_up_action_and_status_bar();
+
         //changing status bar color and dark text in action bar
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
-        //hiding the action bar
-        ActionBar ab = getSupportActionBar();
-        ab.hide();
 
         //setting up bottom navigationbar to the middle element
         bottombar.setCurrentActiveItem(1);
@@ -60,11 +56,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //resetting the map type preferences
-        SharedPreferences.Editor setMap = getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
-        setMap.putString("type", "normal").apply();
+    public void set_up_action_and_status_bar() {
+        //hiding the action bar
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.hide();
+        //changing status bar color
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        // window.setStatusBarColor(Color.parseColor("#FFFFFF"));
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 }
