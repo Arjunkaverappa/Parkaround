@@ -50,6 +50,7 @@ dependencies {
     //noinspection GradleDependency
     // implementation 'com.google.firebase:firebase-auth:19.4.0'                  //firebase authentication
     //the following are the user_defined libraries
+    implementation 'com.google.android.gms:play-services-location:18.0.0'      //google-play servies
     implementation 'com.google.firebase:firebase-auth:20.0.4'                  //firebase auth new
     implementation 'com.github.mohammadatif:Animatoo:master'                   //Animatoo library
     implementation 'com.daimajia.androidanimations:library:2.4@aar'            //YoYo Animations

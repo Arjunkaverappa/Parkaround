@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String MAP_TYPE = "com.ka12.parkaround.this_is_where_map_type_is_saved";
     LinearLayout frag;
     BubbleNavigationConstraintView bottombar;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

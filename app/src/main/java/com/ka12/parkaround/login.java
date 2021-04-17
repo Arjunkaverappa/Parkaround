@@ -70,6 +70,8 @@ public class login extends AppCompatActivity {
     //the following are for firebase realtime database
     DatabaseReference reference;
     FirebaseDatabase firebaseDatabase;
+    //sharedpreference
+    public static final String LOGIN = "com.ka12.parkaround.this_is_where_login_details_are_saved";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
