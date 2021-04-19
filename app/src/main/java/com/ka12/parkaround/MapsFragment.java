@@ -2,7 +2,6 @@ package com.ka12.parkaround;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +45,8 @@ import jahirfiquitiva.libs.fabsmenu.TitleFAB;
 public class MapsFragment extends Fragment {
     public static final String MAP_TYPE = "com.ka12.parkaround.this_is_where_map_type_is_saved";
     public GoogleMap mymap;
+    public FusedLocationProviderClient fusedLocationProviderClient;
+    Double user_latitude, user_longitude;
     public final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
@@ -54,29 +57,20 @@ public class MapsFragment extends Fragment {
             SharedPreferences get_map_type = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE);
             switch (get_map_type.getString("type", "none")) {
                 case "satellite":
-                    googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    mymap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                     break;
                 case "terrain":
-                    googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                    mymap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                     break;
                 case "hybrid":
-                    googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                    mymap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                     break;
                 default:
-                    googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    mymap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             }
-            /*
-            LatLng sydney = new LatLng(12.16217, 75.84665);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Manglore"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
-            Log.e("checking", "just checking");
-
-             */
+            check_permission();
         }
     };
-    //getting the user-location
-    FusedLocationProviderClient fusedLocationProviderClient;
-    Double user_latitude, user_longitude;
     //my attributes
     RelativeLayout host_map;
     FABsMenu fab;
@@ -99,28 +93,33 @@ public class MapsFragment extends Fragment {
         });
         satellite_mode.setOnClickListener(view ->
                 {
+
                     SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
                     setMap.putString("type", "satellite").apply();
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    fm.beginTransaction().replace(R.id.frag, new MapsFragment()).commit();
+
+                    mymap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                    fab.collapse();
                 }
         );
         terrian_mode.setOnClickListener(view ->
                 {
+
                     SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
                     setMap.putString("type", "terrain").apply();
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    fm.beginTransaction().replace(R.id.frag, new MapsFragment()).commit();
+
+                    mymap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                    fab.collapse();
                 }
         );
         hybrid.setOnClickListener(view -> {
+
             SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
             setMap.putString("type", "hybrid").apply();
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.frag, new MapsFragment()).commit();
+
+            mymap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            fab.collapse();
         });
 
-        check_permission();
         Log.e("mymap", "initializing onCreate ");
         return v;
     }
@@ -135,24 +134,11 @@ public class MapsFragment extends Fragment {
         }
     }
 
-    public void check_permission() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        //checking permission if the location permissin is granted
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            //permission granted
-            fetch_the_location();
-        } else {
-            //ask for the permission
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}
-                    , 100);
-            //check the on request permisiion result
-        }
-    }
 
     @SuppressLint("MissingPermission")
     public void fetch_the_location() {
         Log.e("mymap", "fetch the location initiated");
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         //initialising the location manager
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         //checking condition for what type of location service is provided
@@ -168,16 +154,19 @@ public class MapsFragment extends Fragment {
                     //this method gives the previous location
                     user_latitude = location.getLatitude();
                     user_longitude = location.getLongitude();
-                    LatLng sydney = new LatLng(user_latitude, user_longitude);
-                    mymap.addMarker(new MarkerOptions().position(sydney).title("Marker in default mode"));
-                    mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+
+                    Log.e("mum", "lat :" + user_latitude + " \n long :" + user_longitude);
+                    LatLng mylocation = new LatLng(user_latitude, user_longitude);
+                    mymap.addMarker(new MarkerOptions().position(mylocation).title("Marker set as default"));
+                    mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 15));
                     Log.e("mymap", "Previous location was loaded");
+
                 } else {
                     //when location is null we initialize location request
                     //this is where the actual location is fetched from
                     LocationRequest locationRequest = new LocationRequest()
                             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                            .setInterval(9000)
+                            .setInterval(6000)
                             .setFastestInterval(1000)
                             .setNumUpdates(1);
 
@@ -190,10 +179,9 @@ public class MapsFragment extends Fragment {
                             user_longitude = new_location.getLongitude();
                             Log.e("mymap", "lati : " + user_latitude + " \n long : " + user_longitude);
                             //testing
-                            // LatLng sydney = new LatLng(12.16217, 75.84665);
-                            LatLng sydney = new LatLng(user_latitude, user_longitude);
-                            mymap.addMarker(new MarkerOptions().position(sydney).title("Marker set successfully"));
-                            mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+                            LatLng mylocation = new LatLng(user_latitude, user_longitude);
+                            mymap.addMarker(new MarkerOptions().position(mylocation).title("Marker set successfully"));
+                            mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 15));
                             Log.e("mymap", "location fetched successfully");
                         }
                     };
@@ -209,22 +197,24 @@ public class MapsFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        //checking the condition
-        if (requestCode == 100 && grantResults.length > 0 && (grantResults[1] + grantResults[2] == PackageManager.PERMISSION_GRANTED)) {
+    public void check_permission() {
+        //checking permission if the location permissin is granted
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            //permission granted
             fetch_the_location();
+            Toast.makeText(getActivity(), "Permission granted", Toast.LENGTH_SHORT).show();
         } else {
-            AlertDialog.Builder build = new AlertDialog.Builder(getActivity());
-            build.setTitle("Disclaimer");
-            build.setMessage("This permission is important for us to provide you the parking service");
-            build.setPositiveButton("Ok", (dialog, which) -> {
-
-            });
-            build.show();
+            //ask for the permission
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}
+                    , 100);
+            //check the on request permisiion result
+            Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
+            //we shall use loop to check for permission repeatedly
+            new Handler().postDelayed(this::check_permission, 7000);
         }
     }
+
 }
 /*
    to change the color of the marker(we can use custom icon also)
