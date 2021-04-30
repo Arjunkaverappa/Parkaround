@@ -12,4 +12,17 @@
     <string name="get_otp">Get OTP</string>
     <string name="submit">Submit</string>
     <string name="enter_your_name">Enter your name</string>
+    <string name="add_place_text">Please add a location where you want to provide the parking space. This location will be reflected in the Map.</string>
+    <string name="add_location">Add location</string>
+    <string name="use_my_current_location">&#160; Use my location</string>
+    <string name="or">or</string>
+    <string name="enter_the_address">Add location</string>
+    <string name="road_name">Road name, Area, Colony</string>
+    <string name="house">House no, Building name</string>
+    <string name="pincode">Pincode</string>
+    <string name="current_support">Currently we only support locations from selected cities</string>
+    <string name="check_fuel_prices">Check fuel prices</string>
+    <string name="check_traffic_rules">Check traffic rules</string>
+    <string name="set_remianders">Set up remianders</string>
+    <string name="emission_control">Emission control</string>
 </resources>

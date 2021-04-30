@@ -38,7 +38,7 @@
             app:bt_colorActive="@color/black"
             app:bt_colorInactive="@color/white"
             app:bt_icon="@drawable/activities_icon"
-            app:bt_title="Activities" />
+            app:bt_title="Host" />
 
         <com.gauravk.bubblenavigation.BubbleToggleView
             android:id="@+id/received"
@@ -55,8 +55,8 @@
             android:layout_height="45dp"
             app:bt_colorActive="@color/black"
             app:bt_colorInactive="@color/white"
-            app:bt_icon="@drawable/settings_icon"
-            app:bt_title="Settings" />
+            app:bt_icon="@drawable/ic_services"
+            app:bt_title="Services" />
 
     </com.gauravk.bubblenavigation.BubbleNavigationConstraintView>
 

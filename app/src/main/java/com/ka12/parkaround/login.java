@@ -2,6 +2,7 @@ package com.ka12.parkaround;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -72,6 +73,7 @@ public class login extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     //sharedpreference
     public static final String LOGIN = "com.ka12.parkaround.this_is_where_login_details_are_saved";
+    public static final String PHONE_NUMBER = "com.ka12.parkaround.this_is_where_phone_number_of_a_user_is_saved";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,8 +250,13 @@ public class login extends AppCompatActivity {
     public void get_the_data_into_database() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         reference = firebaseDatabase.getReference().child("USERS").child("name");
+
         String username = Objects.requireNonNull(user_name.getText()).toString().trim();
         String user_number = Objects.requireNonNull(number.getText()).toString().trim();
+        //saving the phone number to shared preferences
+        SharedPreferences.Editor setnumber = getSharedPreferences(PHONE_NUMBER, MODE_PRIVATE).edit();
+        setnumber.putString("phone", user_number).apply();
+
         reference.child(user_number).setValue(username).addOnCompleteListener(task -> {
             Intent go = new Intent(login.this, MainActivity.class);
             startActivity(go);

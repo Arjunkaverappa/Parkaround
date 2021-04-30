@@ -2,6 +2,7 @@ package com.ka12.parkaround;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,19 +35,40 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import jahirfiquitiva.libs.fabsmenu.FABsMenu;
 import jahirfiquitiva.libs.fabsmenu.TitleFAB;
 
+/*
+follow the order of data in firebase
+ */
 public class MapsFragment extends Fragment {
     public static final String MAP_TYPE = "com.ka12.parkaround.this_is_where_map_type_is_saved";
     public GoogleMap mymap;
     public FusedLocationProviderClient fusedLocationProviderClient;
-    Double user_latitude, user_longitude;
+    public Double user_latitude, user_longitude;
+    RelativeLayout host_map;
+    FABsMenu fab;
+    //firebase
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference reference;
+    ArrayList<String> latitude = new ArrayList<>();
+    ArrayList<Double> longitude = new ArrayList<>();
+    ArrayList<Double> is_active = new ArrayList<>();
+    //    ArrayList<Integer> map_count = new ArrayList<>();
+    Integer count = 0;
+    Integer map_count = 0;
     public final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
@@ -71,9 +93,6 @@ public class MapsFragment extends Fragment {
             check_permission();
         }
     };
-    //my attributes
-    RelativeLayout host_map;
-    FABsMenu fab;
 
     @Nullable
     @Override
@@ -138,11 +157,12 @@ public class MapsFragment extends Fragment {
     @SuppressLint("MissingPermission")
     public void fetch_the_location() {
         Log.e("mymap", "fetch the location initiated");
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getActivity()));
         //initialising the location manager
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        //checking condition for what type of location service is provided
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        //checking condition for what type of location service is provided or not
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Log.e("mymap", "GPS is enabled");
             //the location service is enabled
             //getting the last location . (we have disabled inspection for this method)
@@ -157,10 +177,10 @@ public class MapsFragment extends Fragment {
 
                     Log.e("mum", "lat :" + user_latitude + " \n long :" + user_longitude);
                     LatLng mylocation = new LatLng(user_latitude, user_longitude);
-                    mymap.addMarker(new MarkerOptions().position(mylocation).title("Marker set as default"));
-                    mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 15));
+                    mymap.addMarker(new MarkerOptions().position(mylocation).title("My location(default)")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 11));
                     Log.e("mymap", "Previous location was loaded");
-
                 } else {
                     //when location is null we initialize location request
                     //this is where the actual location is fetched from
@@ -180,30 +200,31 @@ public class MapsFragment extends Fragment {
                             Log.e("mymap", "lati : " + user_latitude + " \n long : " + user_longitude);
                             //testing
                             LatLng mylocation = new LatLng(user_latitude, user_longitude);
-                            mymap.addMarker(new MarkerOptions().position(mylocation).title("Marker set successfully"));
-                            mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 15));
+                            mymap.addMarker(new MarkerOptions().position(mylocation)
+                                    .title("My location")
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                            mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 11));
                             Log.e("mymap", "location fetched successfully");
                         }
                     };
                     //finally requesting the location update
                     fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
                 }
+                //fetching the location ffrom firebase
+                get_location_from_firebase();
             });
         } else {
-            //this is when the location service is not enabled
-            //this will open the location settings
-            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            open_settings_and_turn_on_location();
         }
     }
 
     public void check_permission() {
         //checking permission if the location permissin is granted
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //permission granted
             fetch_the_location();
-            Toast.makeText(getActivity(), "Permission granted", Toast.LENGTH_SHORT).show();
+            //  get_location_from_firebase();
         } else {
             //ask for the permission
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}
@@ -215,6 +236,93 @@ public class MapsFragment extends Fragment {
         }
     }
 
+    public void open_settings_and_turn_on_location() {
+        //this is when the location service is not enabled
+        //this will open the location settings
+        AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+        b.setTitle("Disclaimer");
+        b.setMessage("Please turn on the location services in order to display the locations.\n" +
+                "Tap on OK to open settings");
+        b.setPositiveButton("OK", (dialog, which) ->
+                startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 500));
+        b.setNeutralButton("Cancel", (dialog, which) -> {
+        });
+        b.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("result", "invoked");
+        if (requestCode == 500) {
+            check_permission();
+        }
+    }
+
+    public void get_location_from_firebase() {
+        Log.e("fireb", "initiated");
+        // clear_the_lists();
+        reset_map();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        reference = firebaseDatabase.getReference().child("LOCATIONS");
+        reference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String data = snapshot.getValue(String.class);
+                Log.d("runit", data);
+                //spliting the data from database
+                if (data != null) {
+                    String[] spliting = data.split("\\#");
+                    if (spliting[2].equals("yes")) {
+                        //setting up the latitude and longitude after splitting
+                        set_the_marker(Double.parseDouble(spliting[0]), Double.parseDouble(spliting[1]));
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                get_location_from_firebase();
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                get_location_from_firebase();
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                get_location_from_firebase();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                get_location_from_firebase();
+            }
+        });
+    }
+
+    public void set_the_marker(Double lat, Double lon) {
+        LatLng mylocation = new LatLng(lat, lon);
+        mymap.addMarker(new MarkerOptions().position(mylocation).title("Marker set successfully"));
+    }
+
+    public void clear_the_lists() {
+        count = 0;
+        latitude.clear();
+        longitude.clear();
+        is_active.clear();
+    }
+
+    public void reset_map() {
+        mymap.clear();
+        if (user_longitude != null && user_latitude != null) {
+            LatLng mylocation = new LatLng(user_latitude, user_longitude);
+            mymap.addMarker(new MarkerOptions().position(mylocation).title("Marker set successfully")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        }
+    }
 }
 /*
    to change the color of the marker(we can use custom icon also)
