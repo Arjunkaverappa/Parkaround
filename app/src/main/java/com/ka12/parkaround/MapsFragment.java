@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -25,6 +26,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -43,6 +46,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -63,15 +68,17 @@ public class MapsFragment extends Fragment {
     //firebase
     FirebaseDatabase firebaseDatabase;
     DatabaseReference reference;
-    ArrayList<String> latitude = new ArrayList<>();
-    ArrayList<Double> longitude = new ArrayList<>();
-    ArrayList<Double> is_active = new ArrayList<>();
-    //    ArrayList<Integer> map_count = new ArrayList<>();
+    //following array lists saves the temprory data from the firebase
+    ArrayList<String> availabe_locations = new ArrayList<>();
+    ProgressBar progressBar;
     Integer count = 0;
     Integer map_count = 0;
+    //recycler view
+    RecyclerView recyclerView;
+    RecyclerViewAdapter recyclerViewAdapter;
     public final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady(@NotNull GoogleMap googleMap) {
             Log.e("mymap", "OnMapReadyCallBack initiated");
             mymap = googleMap;
             //retrieving the maps activity
@@ -100,6 +107,8 @@ public class MapsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_maps, container, false);
         fab = v.findViewById(R.id.fab);
         host_map = v.findViewById(R.id.host_map);
+        recyclerView = v.findViewById(R.id.recycler_view);
+        progressBar = v.findViewById(R.id.progress_bar);
         TitleFAB hybrid = v.findViewById(R.id.first_icon);
         TitleFAB terrian_mode = v.findViewById(R.id.second_icon);
         TitleFAB satellite_mode = v.findViewById(R.id.third_icon);
@@ -112,35 +121,39 @@ public class MapsFragment extends Fragment {
         });
         satellite_mode.setOnClickListener(view ->
                 {
-
                     SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
                     setMap.putString("type", "satellite").apply();
-
                     mymap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                     fab.collapse();
                 }
         );
         terrian_mode.setOnClickListener(view ->
                 {
-
                     SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
                     setMap.putString("type", "terrain").apply();
-
                     mymap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                     fab.collapse();
                 }
         );
         hybrid.setOnClickListener(view -> {
-
             SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
             setMap.putString("type", "hybrid").apply();
-
             mymap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             fab.collapse();
         });
-
         Log.e("mymap", "initializing onCreate ");
+
+        initilise_recycler_view();
         return v;
+    }
+
+    public void initilise_recycler_view() {
+        Log.e("recycler", "initilise recycler view ");
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        //sending list of locations to recyclerview
+        recyclerViewAdapter = new RecyclerViewAdapter(availabe_locations, getActivity());
+        recyclerView.setAdapter(recyclerViewAdapter);
     }
 
     @Override
@@ -168,6 +181,7 @@ public class MapsFragment extends Fragment {
             //getting the last location . (we have disabled inspection for this method)
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task ->
             {
+
                 //getting the co-ordinates if there was a previous location saved
                 Location location = task.getResult();
                 if (location != null) {
@@ -179,14 +193,16 @@ public class MapsFragment extends Fragment {
                     LatLng mylocation = new LatLng(user_latitude, user_longitude);
                     mymap.addMarker(new MarkerOptions().position(mylocation).title("My location(default)")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                    mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 11));
+                    mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 12));
                     Log.e("mymap", "Previous location was loaded");
                 } else {
+
+
                     //when location is null we initialize location request
                     //this is where the actual location is fetched from
                     LocationRequest locationRequest = new LocationRequest()
                             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                            .setInterval(6000)
+                            .setInterval(3000)
                             .setFastestInterval(1000)
                             .setNumUpdates(1);
 
@@ -197,13 +213,13 @@ public class MapsFragment extends Fragment {
                             Location new_location = locationResult.getLastLocation();
                             user_latitude = new_location.getLatitude();
                             user_longitude = new_location.getLongitude();
-                            Log.e("mymap", "lati : " + user_latitude + " \n long : " + user_longitude);
+                            Log.e("mymap", "latitude : " + user_latitude + "\nlongitude : " + user_longitude);
                             //testing
                             LatLng mylocation = new LatLng(user_latitude, user_longitude);
                             mymap.addMarker(new MarkerOptions().position(mylocation)
                                     .title("My location")
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                            mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 11));
+                            mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 12));
                             Log.e("mymap", "location fetched successfully");
                         }
                     };
@@ -262,8 +278,11 @@ public class MapsFragment extends Fragment {
 
     public void get_location_from_firebase() {
         Log.e("fireb", "initiated");
-        // clear_the_lists();
         reset_map();
+        // 0->latitue
+        // 1->longitude
+        // 2->final_address
+        // 3->is_active
         firebaseDatabase = FirebaseDatabase.getInstance();
         reference = firebaseDatabase.getReference().child("LOCATIONS");
         reference.addChildEventListener(new ChildEventListener() {
@@ -274,11 +293,13 @@ public class MapsFragment extends Fragment {
                 //spliting the data from database
                 if (data != null) {
                     String[] spliting = data.split("\\#");
-                    if (spliting[2].equals("yes")) {
+                    if (spliting[3].equals("yes")) {
+                        availabe_locations.add(data);
                         //setting up the latitude and longitude after splitting
-                        set_the_marker(Double.parseDouble(spliting[0]), Double.parseDouble(spliting[1]));
+                        set_the_marker(Double.parseDouble(spliting[0]), Double.parseDouble(spliting[1]), spliting[2]);
                     }
                 }
+                recyclerViewAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -303,24 +324,24 @@ public class MapsFragment extends Fragment {
         });
     }
 
-    public void set_the_marker(Double lat, Double lon) {
+    public void set_the_marker(Double lat, Double lon, String address) {
         LatLng mylocation = new LatLng(lat, lon);
-        mymap.addMarker(new MarkerOptions().position(mylocation).title("Marker set successfully"));
-    }
-
-    public void clear_the_lists() {
-        count = 0;
-        latitude.clear();
-        longitude.clear();
-        is_active.clear();
+        mymap.addMarker(new MarkerOptions().position(mylocation).title(address));
+        progressBar.setVisibility(View.GONE);
     }
 
     public void reset_map() {
+        count = 0;
+        availabe_locations.clear();
+
+        //NOTE: mymap variable is not an arraylist, its a GoogleMap instance
         mymap.clear();
+
         if (user_longitude != null && user_latitude != null) {
             LatLng mylocation = new LatLng(user_latitude, user_longitude);
-            mymap.addMarker(new MarkerOptions().position(mylocation).title("Marker set successfully")
+            mymap.addMarker(new MarkerOptions().position(mylocation).title("My location")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+            mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 12));
         }
     }
 }
@@ -328,6 +349,4 @@ public class MapsFragment extends Fragment {
    to change the color of the marker(we can use custom icon also)
    => googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Manglore").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
 
-   to set the type of the map
-   => googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
  */

@@ -20,9 +20,11 @@
     <string name="road_name">Road name, Area, Colony</string>
     <string name="house">House no, Building name</string>
     <string name="pincode">Pincode</string>
-    <string name="current_support">Currently we only support locations from selected cities</string>
+    <string name="current_support_demo">Currently we only support locations from selected cities</string>
+    <string name="current_support">Please make sure you are currently at the parking location</string>
     <string name="check_fuel_prices">Check fuel prices</string>
     <string name="check_traffic_rules">Check traffic rules</string>
     <string name="set_remianders">Set up remianders</string>
     <string name="emission_control">Emission control</string>
+    <string name="available_parking">Available parking</string>
 </resources>

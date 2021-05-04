@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -29,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -39,13 +38,14 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.List;
 import java.util.Objects;
 
 public class frag_add_land extends Fragment {
     public static final String PHONE_NUMBER = "com.ka12.parkaround.this_is_where_phone_number_of_a_user_is_saved";
+    public static final String IS_LAND_ADDED = "com.ka12.parkaround.this_is_where_boolean_of_is_place_added_is_saved";
+    // public static final String LAND_ADDRESS = "com.ka12.parkaround.this_is_where_parking_address_is_saved";
     LinearLayout add_dialog, enter_details_layout;
-    CardView add_location, enter_location_card, use_location, add_address;
+    CardView add_location, enter_location_card, add_address;// , use_location;
     TextInputEditText road_colony_area, house_or_building, pincode;
     Spinner spinner;
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -64,7 +64,7 @@ public class frag_add_land extends Fragment {
         add_dialog = v.findViewById(R.id.add_dialog);
         add_location = v.findViewById(R.id.add_location);
         enter_location_card = v.findViewById(R.id.enter_location_card);
-        use_location = v.findViewById(R.id.use_location);
+        //use_location = v.findViewById(R.id.use_location);
         add_address = v.findViewById(R.id.add_address);
         spinner = v.findViewById(R.id.spinner);
         road_colony_area = v.findViewById(R.id.road_colony_area);
@@ -76,14 +76,14 @@ public class frag_add_land extends Fragment {
         enter_location_card.setVisibility(View.GONE);
 
         //setting up adapter for spinner
-        String[] cities = new String[]{"Mangalore", "Bangalore", "Mysore", "Hubli", "Kodagu"};
+        String[] cities = new String[]{"Kodagu", "Bangalore", "Mysore", "Hubli", "Mangalore"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, cities);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
-                    case 0:
+                    case 4:
                         city = "Mangalore";
                         break;
                     case 1:
@@ -95,7 +95,7 @@ public class frag_add_land extends Fragment {
                     case 3:
                         city = "Hubli";
                         break;
-                    case 4:
+                    case 0:
                         city = "Kodagu";
                         break;
                 }
@@ -103,7 +103,8 @@ public class frag_add_land extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                city = "Mangalore";
+                //TODO: change  it to mangalore
+                city = "Kodagu";
             }
         });
 
@@ -113,13 +114,8 @@ public class frag_add_land extends Fragment {
             enter_location_card.setVisibility(View.VISIBLE);
         });
 
-        use_location.setOnClickListener(v12 -> {
-            //get the location service running or get from sharedPreferences
-            Toast.makeText(getActivity(), "Fetching your location!", Toast.LENGTH_SHORT).show();
-            check_permission();
-        });
-
-        add_address.setOnClickListener(v13 -> {
+        add_address.setOnClickListener(v13 ->
+        {
             //the details will be taken here
             if (!Objects.requireNonNull(road_colony_area.getText()).toString().equals("")
                     || !Objects.requireNonNull(house_or_building.getText()).toString().equals("")
@@ -127,11 +123,18 @@ public class frag_add_land extends Fragment {
                 user_house_or_build = Objects.requireNonNull(house_or_building.getText()).toString().trim();
                 user_road_or_col = road_colony_area.getText().toString().trim();
                 user_pincode = Objects.requireNonNull(pincode.getText()).toString().trim();
+
+                final_address = user_house_or_build + ", " + user_road_or_col + ", " + city + ", karnataka. " + user_pincode;
+                check_permission();
+                //check_permission >> fetch_the_location >> get_the_data_into_database
                 //we have city in spinner
+                /*
                 final_address = user_house_or_build + ", " + user_road_or_col + ", " + city + ", karnataka. " + user_pincode;
                 Log.d("land", final_address);
                 // get_the_data_into_database();
                 get_location_by_address(final_address);
+
+                 */
             } else {
                 Toast.makeText(getActivity(), "Enter all the details", Toast.LENGTH_SHORT).show();
             }
@@ -177,7 +180,7 @@ public class frag_add_land extends Fragment {
                     //this method gives the previous location
                     user_latitude = location.getLatitude();
                     user_longitude = location.getLongitude();
-                    //this method shouldnt be called here, done for testing purpose only
+                    //location recorded
                     get_the_data_into_database();
                     Log.e("fetch", "lat :" + user_latitude + "\nlong :" + user_longitude + " obtained from last location");
                 } else {
@@ -198,7 +201,7 @@ public class frag_add_land extends Fragment {
                             user_latitude = new_location.getLatitude();
                             user_longitude = new_location.getLongitude();
                             Log.e("fetch", "lati : " + user_latitude + " \n long : " + user_longitude + " fresh location");
-                            //this method shouldnt be called here, done for testing purpose only
+                            //location recorded
                             get_the_data_into_database();
                         }
                     };
@@ -209,6 +212,7 @@ public class frag_add_land extends Fragment {
         } else {
             //this is when the location service is not enabled
             //this will open the location settings
+            //TODO the activity should start again from check permission in order to refetch it after permission is granted
             AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
             b.setTitle("Disclaimer");
             b.setMessage("Please turn on the location services in order to display the locations.\n" +
@@ -226,39 +230,31 @@ public class frag_add_land extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
         reference = firebaseDatabase.getReference().child("LOCATIONS");
 
-        //retrievingthe phone number of the user from shared preferences
+        //retrieving the phone number of the user from shared preferences
         SharedPreferences get_number = Objects.requireNonNull(getActivity()).getSharedPreferences(PHONE_NUMBER, Context.MODE_PRIVATE);
-        user_phone_number = get_number.getString("phone", "9977997799");
-        /*
-        //loading the data into helperclass
-        helperclass help = new helperclass();
-        help.setLatitude(user_latitude);
-        help.setLongitude(user_longitude);
-        help.setIs_active("yes");
+        user_phone_number = get_number.getString("phone", "9977997798");
 
-
-        reference.child(user_phone_number).setValue(help).addOnCompleteListener(task ->
-        {
-            //success tasks
-            Toast.makeText(getActivity(), "SUCCESS", Toast.LENGTH_LONG).show();
-        }).addOnFailureListener(e -> {
-            //failure message
-            Toast.makeText(getActivity(), "FAILED:" + e.getMessage(), Toast.LENGTH_LONG).show();
-        });
-
-         */
-
-        String final_loc = user_latitude + "#" + user_longitude + "#yes";
+        String final_loc = user_latitude + "#" + user_longitude + "#" + final_address + "#yes";
         reference.child(user_phone_number).setValue(final_loc).addOnCompleteListener(task ->
         {
             //success tasks
             Toast.makeText(getActivity(), "SUCCESS", Toast.LENGTH_LONG).show();
+
+            //updating the is land added flag in shared preferences
+            SharedPreferences.Editor set_added = getActivity().getSharedPreferences(IS_LAND_ADDED, Context.MODE_PRIVATE).edit();
+            set_added.putBoolean("is_added", true).apply();
+
+            //returning to main sceen after adding
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.host_fragment, new frag_land_owner()).commit();
+
         }).addOnFailureListener(e -> {
             //failure message
             Toast.makeText(getActivity(), "FAILED:" + e.getMessage(), Toast.LENGTH_LONG).show();
         });
     }
-
+    /*
+    //the below method provides the latitude and longitude of the location from the address provided by user
     public void get_location_by_address(String address) {
         Geocoder coder = new Geocoder(getContext());
         List<Address> get_location;
@@ -278,6 +274,10 @@ public class frag_add_land extends Fragment {
 
     }
 
+     */
+
+   /*
+   //the following  is the helper class for database which is currently not used
     public static class helperclass {
         public Double latitude;
         public Double longitude;
@@ -318,4 +318,6 @@ public class frag_add_land extends Fragment {
             this.is_active = is_active;
         }
     }
+
+    */
 }
