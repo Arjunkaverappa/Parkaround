@@ -3,6 +3,7 @@ package com.ka12.parkaround;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.e("recycler", "called onBindViewHolder");
-        //setting up lists
+
         //split the available_locations here using int position
         String[] split = available_locations.get(position).split("\\#");
         // 0->latitue
@@ -50,6 +51,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         // 3->is_active
 
         holder.address.setText(split[2]);
+        if (split[3].equals("yes")) {
+            holder.active_status.setText("Currently active");
+            holder.active_status.setTextColor(Color.GREEN);
+        } else {
+            holder.active_status.setText("Currently Inactive");
+            holder.active_status.setTextColor(Color.RED);
+        }
 
         holder.location_card.setOnClickListener(v ->
         {
@@ -63,12 +71,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        Log.e("recycler", "called getItemCount");
+        Log.e("recycler", "called getItemCount :" + available_locations.size());
         return available_locations.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView address;
+        TextView address, active_status;
         CardView location_card;
 
         //declare all the views from custom location_lists
@@ -76,6 +84,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             super(itemView);
             address = itemView.findViewById(R.id.address);
             location_card = itemView.findViewById(R.id.location_card);
+            active_status = itemView.findViewById(R.id.active_status);
         }
     }
 }

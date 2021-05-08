@@ -232,7 +232,7 @@ public class frag_add_land extends Fragment {
 
         //retrieving the phone number of the user from shared preferences
         SharedPreferences get_number = Objects.requireNonNull(getActivity()).getSharedPreferences(PHONE_NUMBER, Context.MODE_PRIVATE);
-        user_phone_number = get_number.getString("phone", "9977997798");
+        user_phone_number = get_number.getString("phone", "9977997795");
 
         String final_loc = user_latitude + "#" + user_longitude + "#" + final_address + "#yes";
         reference.child(user_phone_number).setValue(final_loc).addOnCompleteListener(task ->
@@ -246,7 +246,7 @@ public class frag_add_land extends Fragment {
 
             //returning to main sceen after adding
             FragmentManager fm = getActivity().getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.host_fragment, new frag_land_owner()).commit();
+            fm.beginTransaction().remove(new frag_add_land()).replace(R.id.host_fragment, new frag_land_owner()).commit();
 
         }).addOnFailureListener(e -> {
             //failure message

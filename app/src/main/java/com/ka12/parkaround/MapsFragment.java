@@ -56,7 +56,7 @@ import jahirfiquitiva.libs.fabsmenu.FABsMenu;
 import jahirfiquitiva.libs.fabsmenu.TitleFAB;
 
 /*
-follow the order of data in firebase
+   follow the order of data in firebase
  */
 public class MapsFragment extends Fragment {
     public static final String MAP_TYPE = "com.ka12.parkaround.this_is_where_map_type_is_saved";
@@ -97,6 +97,8 @@ public class MapsFragment extends Fragment {
                 default:
                     mymap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             }
+            mymap.setIndoorEnabled(true);
+            mymap.setBuildingsEnabled(true);
             check_permission();
         }
     };
@@ -188,15 +190,8 @@ public class MapsFragment extends Fragment {
                     //this method gives the previous location
                     user_latitude = location.getLatitude();
                     user_longitude = location.getLongitude();
-
-                    Log.e("mum", "lat :" + user_latitude + " \n long :" + user_longitude);
-                    LatLng mylocation = new LatLng(user_latitude, user_longitude);
-                    mymap.addMarker(new MarkerOptions().position(mylocation).title("My location(default)")
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                    mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 12));
-                    Log.e("mymap", "Previous location was loaded");
                 } else {
-
+                    mymap.setMyLocationEnabled(true);
 
                     //when location is null we initialize location request
                     //this is where the actual location is fetched from
@@ -214,13 +209,6 @@ public class MapsFragment extends Fragment {
                             user_latitude = new_location.getLatitude();
                             user_longitude = new_location.getLongitude();
                             Log.e("mymap", "latitude : " + user_latitude + "\nlongitude : " + user_longitude);
-                            //testing
-                            LatLng mylocation = new LatLng(user_latitude, user_longitude);
-                            mymap.addMarker(new MarkerOptions().position(mylocation)
-                                    .title("My location")
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                            mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 12));
-                            Log.e("mymap", "location fetched successfully");
                         }
                     };
                     //finally requesting the location update
@@ -270,6 +258,8 @@ public class MapsFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //testing, do not add check permission here
+        check_permission();
         Log.e("result", "invoked");
         if (requestCode == 500) {
             check_permission();
@@ -277,7 +267,7 @@ public class MapsFragment extends Fragment {
     }
 
     public void get_location_from_firebase() {
-        Log.e("fireb", "initiated");
+        Log.e("fireb", "initiated get_locaation_from_database");
         reset_map();
         // 0->latitue
         // 1->longitude
@@ -293,11 +283,9 @@ public class MapsFragment extends Fragment {
                 //spliting the data from database
                 if (data != null) {
                     String[] spliting = data.split("\\#");
-                    if (spliting[3].equals("yes")) {
-                        availabe_locations.add(data);
-                        //setting up the latitude and longitude after splitting
-                        set_the_marker(Double.parseDouble(spliting[0]), Double.parseDouble(spliting[1]), spliting[2]);
-                    }
+                    availabe_locations.add(data);
+                    //setting up the latitude and longitude after splitting
+                    set_the_marker(Double.parseDouble(spliting[0]), Double.parseDouble(spliting[1]), spliting[2]);
                 }
                 recyclerViewAdapter.notifyDataSetChanged();
             }
@@ -327,10 +315,12 @@ public class MapsFragment extends Fragment {
     public void set_the_marker(Double lat, Double lon, String address) {
         LatLng mylocation = new LatLng(lat, lon);
         mymap.addMarker(new MarkerOptions().position(mylocation).title(address));
-        progressBar.setVisibility(View.GONE);
+        mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 12));
     }
 
     public void reset_map() {
+        progressBar.setVisibility(View.GONE);
+        Log.e("recycler", "reset initiated");
         count = 0;
         availabe_locations.clear();
 

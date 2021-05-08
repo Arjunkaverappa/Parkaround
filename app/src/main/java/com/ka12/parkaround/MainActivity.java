@@ -9,11 +9,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -25,11 +26,11 @@ import com.gauravk.bubblenavigation.BubbleNavigationConstraintView;
 
 
 public class MainActivity extends AppCompatActivity {
-    // public static final String MAP_TYPE = "com.ka12.parkaround.this_is_where_map_type_is_saved";
-// public static final String USER_LOCATION="com.ka12.parkaround.this_is_where_user_location_is_saved";
     LinearLayout frag;
     BubbleNavigationConstraintView bottombar;
     Boolean is_connected = true;
+    long back_pressed, TIME_INTERVAL_BACK = 2000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,33 +55,51 @@ public class MainActivity extends AppCompatActivity {
         fm.beginTransaction().add(R.id.frag, new MapsFragment()).commit();
         bottombar.setNavigationChangeListener((view, position) -> {
             switch (position) {
-                case 0://getting the activity fragment
+                case 0:
+                    vibrate_phone();
+                    //getting the activity fragment
                     FragmentManager activity = getSupportFragmentManager();
-                    activity.beginTransaction().remove(new MapsFragment()).remove(new frag_services()).replace(R.id.frag, new frag_land_owner()).commit();
+                    activity.beginTransaction().remove(new MapsFragment())
+                            .remove(new frag_services())
+                            .replace(R.id.frag, new frag_land_owner())
+                            .commit();
                     break;
-                case 1://getting the maps fragment
+                case 1:
+                    vibrate_phone();
+                    //getting the maps fragment
                     FragmentManager explore = getSupportFragmentManager();
-                    explore.beginTransaction().remove(new frag_services()).remove(new frag_land_owner()).replace(R.id.frag, new MapsFragment()).commit();
+                    explore.beginTransaction().remove(new frag_services())
+                            .remove(new frag_land_owner())
+                            .replace(R.id.frag, new MapsFragment())
+                            .commit();
                     break;
                 case 2:
+                    vibrate_phone();
                     //getting the settings fragment
                     FragmentManager settings = getSupportFragmentManager();
-                    settings.beginTransaction().remove(new MapsFragment()).remove(new frag_land_owner()).replace(R.id.frag, new frag_services()).commit();
+                    settings.beginTransaction().remove(new MapsFragment())
+                            .remove(new frag_land_owner())
+                            .replace(R.id.frag, new frag_profile())
+                            .commit();
                     break;
             }
         });
     }
 
+    public void vibrate_phone() {
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(30);
+    }
+
     public void set_up_action_and_status_bar() {
+
         //hiding the action bar
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.hide();
-        //changing status bar color
         //to get transparent status bar, try changing the themes
         Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        window.setStatusBarColor(Color.parseColor("#FFFFFF"));
+        window.setStatusBarColor(Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
@@ -142,6 +161,16 @@ public class MainActivity extends AppCompatActivity {
             }, 5000);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (back_pressed + TIME_INTERVAL_BACK > System.currentTimeMillis()) {
+            super.onBackPressed();
+        } else {
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+            back_pressed = System.currentTimeMillis();
         }
     }
 }

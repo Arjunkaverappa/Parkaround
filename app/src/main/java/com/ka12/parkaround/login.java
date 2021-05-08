@@ -1,5 +1,6 @@
 package com.ka12.parkaround;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -75,6 +76,7 @@ public class login extends AppCompatActivity {
     public static final String LOGIN = "com.ka12.parkaround.this_is_where_login_details_are_saved";
     public static final String PHONE_NUMBER = "com.ka12.parkaround.this_is_where_phone_number_of_a_user_is_saved";
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +107,16 @@ public class login extends AppCompatActivity {
             login_card.setVisibility(View.GONE);
             signup_card.setVisibility(View.GONE);
         });
+        login_card.setOnLongClickListener(v -> {
+            Intent go = new Intent(login.this, MainActivity.class);
+            startActivity(go);
+            Animatoo.animateZoom(login.this);
+            finish();
+            return false;
+        });
+
+        //TODO enable this
+        signup_card.setVisibility(View.GONE);
         signup_card.setOnClickListener(v -> Toast.makeText(login.this, "signup!!!", Toast.LENGTH_SHORT).show());
 
         //onclick listenres for the login process
@@ -114,10 +126,18 @@ public class login extends AppCompatActivity {
                 Toast.makeText(login.this, "Please check the number", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onCreate: Error by the user");
             } else {
-                get_otp_card.setVisibility(View.GONE);
-                otp_card.setVisibility(View.VISIBLE);
-                //calling the otp varification function
-                verify_phone_number_step_one(number.getText().toString().trim());
+                AlertDialog.Builder b = new AlertDialog.Builder(this);
+                b.setTitle("Disclaimer");
+                b.setMessage("We know that your not a robot, but still lets get it verified.");
+                b.setPositiveButton("Ok", (dialog, which) -> {
+                    get_otp_card.setVisibility(View.GONE);
+                    otp_card.setVisibility(View.VISIBLE);
+                    //calling the otp varification function
+                    //notify users about the not a robot thing
+                    verify_phone_number_step_one(number.getText().toString().trim());
+                });
+                b.setCancelable(false);
+                b.show();
             }
         });
 
@@ -129,6 +149,7 @@ public class login extends AppCompatActivity {
                 Toast.makeText(this, "please check the otp", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onCreate: Error in entered otp");
             } else {
+                check_otp.setText("Verifying otp....");
                 verify_phone_with_code(mVarificationId, code);
             }
         });
@@ -176,13 +197,13 @@ public class login extends AppCompatActivity {
                 Log.d(TAG, "onCodeSent: initiated onVerification failed in callback");
                 Log.d(TAG, "onCodeSent: Error : " + e.getMessage());
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    Toast.makeText(login.this, "Invalid request", Toast.LENGTH_SHORT).show();
+                    error_dialog(e.getMessage() + " : obtained from onVerificationFailed : Invalid request");
                 } else if (e instanceof FirebaseTooManyRequestsException) {
-                    Toast.makeText(login.this, "SMS quota exceeded", Toast.LENGTH_SHORT).show();
+                    error_dialog(e.getMessage() + " : obtained from onVerificationFailed : SMS quota exceeded");
                 } else if (e instanceof FirebaseApiNotAvailableException) {
-                    Toast.makeText(login.this, "API not available", Toast.LENGTH_SHORT).show();
+                    error_dialog(e.getMessage() + " : obtained from onVerificationFailed : API not available");
                 } else if (e instanceof FirebaseAuthInvalidUserException) {
-                    Toast.makeText(login.this, "Invalid user exception", Toast.LENGTH_SHORT).show();
+                    error_dialog(e.getMessage() + " : obtained from onVerificationFailed : Invalid user exception");
                 }
             }
         };
@@ -214,21 +235,9 @@ public class login extends AppCompatActivity {
                 //get the data inot realtime database
                 Log.d(TAG, "signInWithPhoneNumber_final: SUCCESS");
                 get_the_data_into_database();
-                /*
-
-                 */
-                finish();
             } else {
                 Log.d(TAG, "signInWithPhoneNumber_final: ERROR: " + task.getException());
-                if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                    Toast.makeText(login.this, "Invalid request", Toast.LENGTH_SHORT).show();
-                } else if (task.getException() instanceof FirebaseTooManyRequestsException) {
-                    Toast.makeText(login.this, "SMS quota exceeded", Toast.LENGTH_SHORT).show();
-                } else if (task.getException() instanceof FirebaseApiNotAvailableException) {
-                    Toast.makeText(login.this, "API not available", Toast.LENGTH_SHORT).show();
-                } else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
-                    Toast.makeText(login.this, "Invalid user exception", Toast.LENGTH_SHORT).show();
-                }
+                error_dialog(task.getException() + " : obtained from signInWithPhoneNumner_final");
             }
 
         });
@@ -257,13 +266,19 @@ public class login extends AppCompatActivity {
         SharedPreferences.Editor setnumber = getSharedPreferences(PHONE_NUMBER, MODE_PRIVATE).edit();
         setnumber.putString("phone", user_number).apply();
 
-        reference.child(user_number).setValue(username).addOnCompleteListener(task -> {
+        reference.child(user_number).setValue(username).addOnCompleteListener(task ->
+        {
+            //updating the shared preferences
+            SharedPreferences.Editor set_login = getSharedPreferences(LOGIN, MODE_PRIVATE).edit();
+            set_login.putBoolean("is_login", true).apply();
+            //next
             Intent go = new Intent(login.this, MainActivity.class);
             startActivity(go);
             Animatoo.animateZoom(login.this);
+            finish();
         }).addOnFailureListener(e -> {
             Log.d(TAG, "get_the_data_into_database: ERROR :" + e.getMessage());
-            Toast.makeText(this, "Error :" + e.getMessage(), Toast.LENGTH_LONG).show();
+            error_dialog(e.getMessage() + " : obtained from get_the_data_into_database");
         });
     }
      /*
@@ -307,7 +322,15 @@ public class login extends AppCompatActivity {
                 }
             }, 3500);
         } catch (Exception e) {
-            e.printStackTrace();
+            error_dialog(e.getMessage() + " : obtained from check_network");
         }
+    }
+
+    public void error_dialog(String error) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle("Error!!!");
+        b.setMessage(error);
+        b.setPositiveButton("Exit", (dialog, which) -> System.exit(0));
+        b.show();
     }
 }

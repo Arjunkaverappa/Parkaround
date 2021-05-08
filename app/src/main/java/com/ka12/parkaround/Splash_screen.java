@@ -46,6 +46,6 @@ public class Splash_screen extends AppCompatActivity {
             startActivity(in);
             Animatoo.animateZoom(Splash_screen.this);
             finish();
-        }, 1000);
+        }, 1500);
     }
 }

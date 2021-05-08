@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Parkaround</string>
-    <string name="bhanu">bhanu</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="this_is_the_settings_fragment">This is the settings fragment</string>
@@ -12,7 +11,7 @@
     <string name="get_otp">Get OTP</string>
     <string name="submit">Submit</string>
     <string name="enter_your_name">Enter your name</string>
-    <string name="add_place_text">Please add a location where you want to provide the parking space. This location will be reflected in the Map.</string>
+    <string name="add_place_text">Please add the location where you want to provide the parking space. This location will be reflected in the Map.</string>
     <string name="add_location">Add location</string>
     <string name="use_my_current_location">&#160; Use my location</string>
     <string name="or">or</string>
@@ -27,4 +26,8 @@
     <string name="set_remianders">Set up remianders</string>
     <string name="emission_control">Emission control</string>
     <string name="available_parking">Available parking</string>
+    <string name="fetching_status">Fetching status…</string>
+    <string name="fetching_address">Fetching address…</string>
+    <string name="settings">Settings</string>
+    <string name="host_land">Host land</string>
 </resources>

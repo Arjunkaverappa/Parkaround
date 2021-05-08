@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.Parkaround"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -12,14 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" />
-    <!--
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="55dp"
-        android:id="@+id/listview"/>
-     -->
 
     <com.gauravk.bubblenavigation.BubbleNavigationConstraintView
         android:id="@+id/bottombar"
