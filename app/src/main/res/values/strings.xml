@@ -30,4 +30,12 @@
     <string name="fetching_address">Fetching address…</string>
     <string name="settings">Settings</string>
     <string name="host_land">Host land</string>
+    <string name="enter_car_number">Enter vehicle number</string>
+    <string name="add_vehicle">Add vehicle</string>
+    <string name="enter_vehicle_model">Enter vehicle model</string>
+    <string name="book_location">book Location</string>
+    <string name="near_to_shop_complex_landmark">Near to shop/complex/landmark</string>
+    <string name="pricing_info">max  ₹99/hour \nmin  ₹10/hour</string>
+    <string name="price">Price/Hour</string>
+    <string name="set_timings">Set Timings</string>
 </resources>

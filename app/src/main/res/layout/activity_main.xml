@@ -30,8 +30,8 @@
             android:hapticFeedbackEnabled="true"
             app:bt_colorActive="@color/black"
             app:bt_colorInactive="@color/white"
-            app:bt_icon="@drawable/activities_icon"
-            app:bt_title="Host" />
+            app:bt_icon="@drawable/ic_services"
+            app:bt_title="Services" />
 
         <com.gauravk.bubblenavigation.BubbleToggleView
             android:id="@+id/received"
@@ -48,8 +48,8 @@
             android:layout_height="45dp"
             app:bt_colorActive="@color/black"
             app:bt_colorInactive="@color/white"
-            app:bt_icon="@drawable/ic_services"
-            app:bt_title="Services" />
+            app:bt_icon="@drawable/ic_profile_24"
+            app:bt_title="Profile" />
 
     </com.gauravk.bubblenavigation.BubbleNavigationConstraintView>
 

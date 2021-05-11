@@ -1,5 +1,6 @@
 package com.ka12.parkaround;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +23,12 @@ public class frag_profile extends Fragment {
 
         settings_vard.setOnClickListener(v1 -> {
             //something
-            Toast.makeText(getActivity(), "Settings", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "land", Toast.LENGTH_SHORT).show();
         });
 
         land_card.setOnClickListener(v12 -> {
-            //something
-            Toast.makeText(getActivity(), "land", Toast.LENGTH_SHORT).show();
+            //opening host land
+            startActivity(new Intent(getActivity(), host_land.class));
         });
         return v;
     }

@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
         //setting up bottom navigationbar to the middle element
         bottombar.setCurrentActiveItem(1);
-        //getting the maps fragment and setting it as default
+
+        //getting the maps fragment and setting-it as default
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().add(R.id.frag, new MapsFragment()).commit();
         bottombar.setNavigationChangeListener((view, position) -> {
@@ -60,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
                     //getting the activity fragment
                     FragmentManager activity = getSupportFragmentManager();
                     activity.beginTransaction().remove(new MapsFragment())
-                            .remove(new frag_services())
-                            .replace(R.id.frag, new frag_land_owner())
+                            .remove(new frag_land_owner())
+                            .replace(R.id.frag, new frag_services())
                             .commit();
                     break;
                 case 1:

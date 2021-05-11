@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -49,6 +48,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         // 1->longitude
         // 2->final_address
         // 3->is_active
+        // 4->price
 
         holder.address.setText(split[2]);
         if (split[3].equals("yes")) {
@@ -58,11 +58,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.active_status.setText("Currently Inactive");
             holder.active_status.setTextColor(Color.RED);
         }
+        holder.pricing.setText("₹" + split[4]);
 
         holder.location_card.setOnClickListener(v ->
         {
             //setting up onlick listeners
-            Toast.makeText(mContext, "item clicked at " + position, Toast.LENGTH_SHORT).show();
             Intent go_to_booking = new Intent(mContext, booking.class);
             go_to_booking.putExtra("details", available_locations.get(position));
             mContext.startActivity(go_to_booking);
@@ -76,7 +76,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView address, active_status;
+        TextView address, active_status, pricing;
         CardView location_card;
 
         //declare all the views from custom location_lists
@@ -85,6 +85,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             address = itemView.findViewById(R.id.address);
             location_card = itemView.findViewById(R.id.location_card);
             active_status = itemView.findViewById(R.id.active_status);
+            pricing = itemView.findViewById(R.id.pricing);
         }
     }
 }

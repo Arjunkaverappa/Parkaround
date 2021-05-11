@@ -46,15 +46,14 @@ public class frag_add_land extends Fragment {
     // public static final String LAND_ADDRESS = "com.ka12.parkaround.this_is_where_parking_address_is_saved";
     LinearLayout add_dialog, enter_details_layout;
     CardView add_location, enter_location_card, add_address;// , use_location;
-    TextInputEditText road_colony_area, house_or_building, pincode;
+    TextInputEditText near_to, road_colony_area, house_or_building, pincode, price;
     Spinner spinner;
     FusedLocationProviderClient fusedLocationProviderClient;
     Double user_latitude, user_longitude;
-    String user_house_or_build, user_road_or_col, city, user_pincode, final_address;
+    String user_house_or_build, user_road_or_col, city, user_pincode, final_address, user_phone_number, address_near_to, user_price;
     //database
     FirebaseDatabase firebaseDatabase;
     DatabaseReference reference;
-    String user_phone_number;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,34 +70,20 @@ public class frag_add_land extends Fragment {
         house_or_building = v.findViewById(R.id.house_or_building);
         enter_details_layout = v.findViewById(R.id.enter_details_layout);
         pincode = v.findViewById(R.id.pincode);
+        near_to = v.findViewById(R.id.near_to);
+        price = v.findViewById(R.id.price);
 
         //hiding the enter location card
         enter_location_card.setVisibility(View.GONE);
 
         //setting up adapter for spinner
-        String[] cities = new String[]{"Kodagu", "Bangalore", "Mysore", "Hubli", "Mangalore"};
+        String[] cities = new String[]{"City", "Kodagu", "Bangalore", "Mysore", "Hubli", "Mangalore"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, cities);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 4:
-                        city = "Mangalore";
-                        break;
-                    case 1:
-                        city = "Bangalore";
-                        break;
-                    case 2:
-                        city = "Mysore";
-                        break;
-                    case 3:
-                        city = "Hubli";
-                        break;
-                    case 0:
-                        city = "Kodagu";
-                        break;
-                }
+                city = cities[position];
             }
 
             @Override
@@ -119,22 +104,18 @@ public class frag_add_land extends Fragment {
             //the details will be taken here
             if (!Objects.requireNonNull(road_colony_area.getText()).toString().equals("")
                     || !Objects.requireNonNull(house_or_building.getText()).toString().equals("")
-                    || !Objects.requireNonNull(pincode.getText()).toString().equals("")) {
+                    || near_to.getText().toString().equals("")
+                    || !Objects.requireNonNull(pincode.getText()).toString().equals("")
+                    || price.getText().toString().equals("")) {
+                address_near_to = near_to.getText().toString().trim();
                 user_house_or_build = Objects.requireNonNull(house_or_building.getText()).toString().trim();
                 user_road_or_col = road_colony_area.getText().toString().trim();
                 user_pincode = Objects.requireNonNull(pincode.getText()).toString().trim();
+                user_price = price.getText().toString().trim();
 
-                final_address = user_house_or_build + ", " + user_road_or_col + ", " + city + ", karnataka. " + user_pincode;
+                final_address = "Near " + address_near_to + ", " + user_house_or_build + ", " + user_road_or_col + ", " + city + ", karnataka. " + user_pincode;
                 check_permission();
-                //check_permission >> fetch_the_location >> get_the_data_into_database
-                //we have city in spinner
-                /*
-                final_address = user_house_or_build + ", " + user_road_or_col + ", " + city + ", karnataka. " + user_pincode;
-                Log.d("land", final_address);
-                // get_the_data_into_database();
-                get_location_by_address(final_address);
 
-                 */
             } else {
                 Toast.makeText(getActivity(), "Enter all the details", Toast.LENGTH_SHORT).show();
             }
@@ -234,7 +215,7 @@ public class frag_add_land extends Fragment {
         SharedPreferences get_number = Objects.requireNonNull(getActivity()).getSharedPreferences(PHONE_NUMBER, Context.MODE_PRIVATE);
         user_phone_number = get_number.getString("phone", "9977997795");
 
-        String final_loc = user_latitude + "#" + user_longitude + "#" + final_address + "#yes";
+        String final_loc = user_latitude + "#" + user_longitude + "#" + final_address + "#yes#" + user_price;
         reference.child(user_phone_number).setValue(final_loc).addOnCompleteListener(task ->
         {
             //success tasks

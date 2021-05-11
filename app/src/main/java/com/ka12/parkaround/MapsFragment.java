@@ -2,7 +2,7 @@ package com.ka12.parkaround;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,11 +29,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -171,14 +174,13 @@ public class MapsFragment extends Fragment {
 
     @SuppressLint("MissingPermission")
     public void fetch_the_location() {
-        Log.e("mymap", "fetch the location initiated");
+        Log.e("result", "fetch the location initiated");
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getActivity()));
         //initialising the location manager
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         //checking condition for what type of location service is provided or not
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            Log.e("mymap", "GPS is enabled");
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            Log.e("result", "GPS is enabled");
             //the location service is enabled
             //getting the last location . (we have disabled inspection for this method)
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task ->
@@ -191,7 +193,8 @@ public class MapsFragment extends Fragment {
                     user_latitude = location.getLatitude();
                     user_longitude = location.getLongitude();
                 } else {
-                    mymap.setMyLocationEnabled(true);
+                    //disabled for now
+                    //mymap.setMyLocationEnabled(true);
 
                     //when location is null we initialize location request
                     //this is where the actual location is fetched from
@@ -214,7 +217,7 @@ public class MapsFragment extends Fragment {
                     //finally requesting the location update
                     fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
                 }
-                //fetching the location ffrom firebase
+                //fetching the location from firebase
                 get_location_from_firebase();
             });
         } else {
@@ -223,6 +226,7 @@ public class MapsFragment extends Fragment {
     }
 
     public void check_permission() {
+        Log.d("result", "running check permission");
         //checking permission if the location permissin is granted
         if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -241,38 +245,74 @@ public class MapsFragment extends Fragment {
     }
 
     public void open_settings_and_turn_on_location() {
+        Log.e("result", "open_settings_and_turn_on_location");
         //this is when the location service is not enabled
-        //this will open the location settings
-        AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
-        b.setTitle("Disclaimer");
-        b.setMessage("Please turn on the location services in order to display the locations.\n" +
-                "Tap on OK to open settings");
-        b.setPositiveButton("OK", (dialog, which) ->
-                startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 500));
-        b.setNeutralButton("Cancel", (dialog, which) -> {
+        LocationSettingsRequest mLocationSettingsRequest;
+        SettingsClient mSettingsClient = new SettingsClient(Objects.requireNonNull(getContext()));
+
+        LocationSettingsRequest.Builder request_location = new LocationSettingsRequest.Builder();
+        request_location.addLocationRequest(new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY));
+        request_location.setAlwaysShow(true);
+        mLocationSettingsRequest = request_location.build();
+
+        mSettingsClient.checkLocationSettings(mLocationSettingsRequest)
+                .addOnCompleteListener(task -> {
+                    //successful
+                    //this means the dialog has been displayed
+                    Log.e("result", "okkk");
+                }).addOnFailureListener(e -> {
+            //failed
+            if (e instanceof ResolvableApiException) {
+                //location is not obtained, but can be fixed by showing a dialog
+                try {
+                    ResolvableApiException r = (ResolvableApiException) e;
+                    startIntentSenderForResult(r.getResolution().getIntentSender(), 500, null, 0, 0, 0, null);
+                } catch (Exception ex) {
+                    //nothing can be done
+                }
+            }
+
+        }).addOnCanceledListener(() -> {
+            //user has cancled
+            Toast.makeText(getActivity(), "Cancled", Toast.LENGTH_SHORT).show();
         });
-        b.show();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //testing, do not add check permission here
-        check_permission();
-        Log.e("result", "invoked");
+        //TODO :onActivity Result is called spontainously, fix it
         if (requestCode == 500) {
-            check_permission();
+            if (Activity.RESULT_OK == resultCode) {
+                Log.e("result", "request code 500");
+                fetch_the_location();
+            } else if (Activity.RESULT_CANCELED == resultCode) {
+                //user canceled
+                startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 100);
+            }
+        } else if (requestCode == 100) {
+            LocationManager locationManager = (LocationManager) Objects.requireNonNull(getActivity()).getSystemService(Context.LOCATION_SERVICE);
+            boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+            if (!isGpsEnabled) {
+                Log.e("result", "request code 100 not enabled");
+                Toast.makeText(getActivity(), "Leave!!", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.e("result", "request code 100");
+                fetch_the_location();
+            }
         }
     }
 
     public void get_location_from_firebase() {
-        Log.e("fireb", "initiated get_locaation_from_database");
+        Log.e("result", "initiated get_location_from_database");
         reset_map();
         // 0->latitue
         // 1->longitude
         // 2->final_address
         // 3->is_active
+        // 4->user_price
         firebaseDatabase = FirebaseDatabase.getInstance();
         reference = firebaseDatabase.getReference().child("LOCATIONS");
         reference.addChildEventListener(new ChildEventListener() {

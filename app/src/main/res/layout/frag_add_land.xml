@@ -83,6 +83,30 @@
 
                 <!--this is for entering the details-->
 
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/custom_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    app:boxCornerRadiusBottomEnd="15dp"
+                    app:boxCornerRadiusBottomStart="15dp"
+                    app:boxCornerRadiusTopEnd="15dp"
+                    app:boxCornerRadiusTopStart="15dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/near_to"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:hint="@string/near_to_shop_complex_landmark"
+                        android:maxLength="40"
+                        android:textColorHint="#8E8D8D"
+                        android:textSize="18sp"
+                        tools:ignore="Autofill" />
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <LinearLayout
                     android:id="@+id/enter_details_layout"
                     android:layout_width="match_parent"
@@ -180,6 +204,50 @@
                             android:layout_margin="10dp"
                             android:layout_weight="1"
                             android:spinnerMode="dropdown" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/custom_edit_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            app:boxCornerRadiusBottomEnd="15dp"
+                            app:boxCornerRadiusBottomStart="15dp"
+                            app:boxCornerRadiusTopEnd="15dp"
+                            app:boxCornerRadiusTopStart="15dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/price"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:hint="@string/price"
+                                android:inputType="number"
+                                android:maxLength="2"
+                                android:textColorHint="#8E8D8D"
+                                android:textSize="18sp"
+                                tools:ignore="Autofill" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:text="@string/pricing_info"
+                            android:textSize="18sp"
+                            android:textStyle="italic" />
 
                     </LinearLayout>
 

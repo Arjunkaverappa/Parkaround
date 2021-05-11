@@ -257,8 +257,13 @@ public class login extends AppCompatActivity {
     }
 
     public void get_the_data_into_database() {
+        String user_phone_number = number.getText().toString().trim();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        reference = firebaseDatabase.getReference().child("USERS").child("name");
+        reference = firebaseDatabase.getReference()
+                .child("USERS")
+                .child("DETAILS")
+                .child(user_phone_number)
+                .child("NAME");
 
         String username = Objects.requireNonNull(user_name.getText()).toString().trim();
         String user_number = Objects.requireNonNull(number.getText()).toString().trim();
@@ -266,7 +271,7 @@ public class login extends AppCompatActivity {
         SharedPreferences.Editor setnumber = getSharedPreferences(PHONE_NUMBER, MODE_PRIVATE).edit();
         setnumber.putString("phone", user_number).apply();
 
-        reference.child(user_number).setValue(username).addOnCompleteListener(task ->
+        reference.setValue(username).addOnCompleteListener(task ->
         {
             //updating the shared preferences
             SharedPreferences.Editor set_login = getSharedPreferences(LOGIN, MODE_PRIVATE).edit();
