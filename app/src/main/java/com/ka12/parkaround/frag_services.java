@@ -6,11 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import io.armcha.elasticview.ElasticView;
+
 public class frag_services extends Fragment {
-    CardView fuel_card, emission_card, traffic_card, remainder_card;
+    // CardView fuel_card, emission_card, traffic_card, remainder_card;
+    ElasticView fuel_card, emission_card, traffic_card, remainder_card;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

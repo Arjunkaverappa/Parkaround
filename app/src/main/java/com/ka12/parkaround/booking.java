@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -18,23 +19,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 
-import com.mahdizareei.mztimepicker.MZTimePicker;
-import com.mahdizareei.mztimepicker.models.TimeModel;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.mcsoft.timerangepickerdialog.RangeTimePickerDialog;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Objects;
 
-public class booking extends AppCompatActivity {
+import ng.max.slideview.SlideView;
+
+public class booking extends AppCompatActivity implements RangeTimePickerDialog.ISelectedTime {
     public static final String IS_VEHICLE_ADDED = "com.ka12.this_is_where_boolean_of_is_vehicle_added_is_saved";
     public static final String CLICK_DATA = "com.ka12.this_is_where_boolean_of_is_vehicle_added_is_saved";
+    public static final String PHONE_NUMBER = "com.ka12.parkaround.this_is_where_phone_number_of_a_user_is_saved";
+    public static final String USER_VEHICLE = "com.ka12.this_is_where_user_vehicle_is_saved";
     TextView address, pricing, display_time, total_price;
-    CardView book_location, set_time;
+    CardView set_time;
     LinearLayout change_layout, original_layout;
     Boolean is_vehicle_added;
     String data_from_previous_activity;
     Integer location_price;
+    SlideView swipe;
+    //firebaseDatabase
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference reference;
+    String user_phone_number, user_address, user_time_start, user_time_end, user_vehicle_details;
+    Boolean was_time_range_selected = false;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -44,16 +53,16 @@ public class booking extends AppCompatActivity {
         setContentView(R.layout.activity_booking);
         address = findViewById(R.id.address);
         original_layout = findViewById(R.id.original_layout);
-        book_location = findViewById(R.id.book_location);
         pricing = findViewById(R.id.pricing);
         set_time = findViewById(R.id.set_time);
         display_time = findViewById(R.id.display_time);
         total_price = findViewById(R.id.total_price);
+        swipe = findViewById(R.id.swipe);
 
         //setting up action bar
         set_up_action_and_status_bar();
 
-        //testing
+        //testing //remove this later
         address.setOnLongClickListener(v -> {
             Toast.makeText(this, "reset", Toast.LENGTH_SHORT).show();
             SharedPreferences.Editor set_data = getSharedPreferences(CLICK_DATA, MODE_PRIVATE).edit();
@@ -81,72 +90,82 @@ public class booking extends AppCompatActivity {
             data_from_previous_activity = get_data.getString("prev_data", "null");
 
             Log.e("loggy", data_from_previous_activity);
+            //spit the text and set up textviews
             set_up_text_views(data_from_previous_activity);
         } else {
+            //the vehicle is not added, show  a different fragment
             original_layout.setVisibility(View.GONE);
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction()
-                    .replace(R.id.change_layout, new add_vehicle())
+                    .replace(R.id.change_layout, new frag_add_vehicle())
                     .commit();
         }
+        set_time.setOnClickListener(v -> {
 
-        set_time.setOnClickListener(v ->
-
-                new MZTimePicker(booking.this)
-                        .setTabColor(Color.DKGRAY)
-                        .setConfirmButtonColor((getResources().getColor(R.color.black)))
-                        .setDeleteButtonColor((getResources().getColor(R.color.black)))
-                        .setConfirmTextColor((getResources().getColor(R.color.white)))
-                        .setDeleteTextColor((getResources().getColor(R.color.white)))
-                        .BuildTimePicker((time1, time2) -> {
-                            //select process
-                            String timeString = time1.getHour() + ":" + time1.getMinute() + " - " + time2.getHour() + ":" + time2.getMinute();
-                            if (check_if_time_is_valid(time1, time2)) {
-                                display_time.setText(timeString);
-                            } else {
-                                display_time.setText("Add timings");
-                            }
-                        }));
-
-        //hiding total price
-        total_price.setVisibility(View.GONE);
-
-        book_location.setOnClickListener(v -> {
-            //update the following in database
-            //relevent functions
+            RangeTimePickerDialog dialog = new RangeTimePickerDialog();
+            dialog.newInstance();
+            dialog.setRadiusDialog(50); // Set radius of dialog (default is 50)
+            dialog.setIs24HourView(false); // Indicates if the format should be 24 hours
+            dialog.setColorBackgroundHeader(R.color.colorPrimary); // Set Color of Background header dialog
+            dialog.setColorTextButton(R.color.colorPrimaryDark); // Set Text color of button
+            android.app.FragmentManager fragmentManager = getFragmentManager();
+            dialog.show(fragmentManager, "");
         });
+
+        swipe.setOnSlideCompleteListener(slideView ->
+        {
+            if (was_time_range_selected) {
+
+                Vibrator v = (Vibrator) Objects.requireNonNull(getSystemService(Context.VIBRATOR_SERVICE));
+                v.vibrate(65);
+                confrim_booking();
+            } else {
+                Toast.makeText(this, "Please set the timings!!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //hiding total price for now
+        total_price.setVisibility(View.GONE);
     }
 
-    @SuppressLint("SetTextI18n")
-    public Boolean check_if_time_is_valid(TimeModel time1, TimeModel time2) {
-        //getting system time
-        SimpleDateFormat sdf = new SimpleDateFormat("HH", Locale.US);
-        String str = sdf.format(new Date().getHours());
-        int hour_now = Integer.parseInt(str);
-        int min_now = LocalTime.now().getMinute();
+    public void confrim_booking() {
 
-        Log.d("date", str);
+        //getting user_phone number
+        SharedPreferences get_number = Objects.requireNonNull(getSharedPreferences(PHONE_NUMBER, Context.MODE_PRIVATE));
+        user_phone_number = get_number.getString("phone", "9977997795");
 
-        //getting user start time
-        int user_hour_one = Integer.parseInt(time1.getHour());
-        int user_min_one = Integer.parseInt(time1.getMinute());
-        //getting user end time
-        int user_hour_two = Integer.parseInt(time2.getHour());
-        int user_min_two = Integer.parseInt(time2.getMinute());
+        //getting user car details
+        SharedPreferences get_vehicle = getSharedPreferences(USER_VEHICLE, Context.MODE_PRIVATE);
+        user_vehicle_details = get_vehicle.getString("user_vehicle", "something went wrong");
 
-        if (hour_now < user_hour_one) {
-            Toast.makeText(this, "Time is lesser than current time", Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (user_hour_one > user_hour_two) {
-            Toast.makeText(this, "Please check the time", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        //calculating price
-        int total_hours = user_hour_two - user_hour_one;
-        total_price.setVisibility(View.VISIBLE);
-        total_price.setText("Total price : ₹" + total_hours * location_price);//+"\nDuration : "+total_hours+" hours");
-        return true;
+        //the final input sent to firebase
+        String input_text = user_vehicle_details + "#" + user_address + "#" + user_time_start + "#" + user_time_end;
 
+         /*
+            1) vehicle number
+            2) vehicle model
+            3) manufacturer
+            4) color            (<-from user_vehicle_details)
+            5) user address
+            5) time start
+            6) time end
+         */
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        reference = firebaseDatabase.getReference().child("BOOKINGS");
+        reference.child(user_phone_number).setValue(input_text).addOnCompleteListener(task -> {
+            //update the is_active_status in firebase for revelent field
+            Toast.makeText(this, "Location booked!", Toast.LENGTH_SHORT).show();
+            change_the_values_in_database();
+        }).addOnFailureListener(e -> {
+            //on failure listener
+            Toast.makeText(booking.this, "Something went wrong : ERROR :" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+
+    }
+
+    public void change_the_values_in_database() {
+        //TODO change active status
     }
 
 
@@ -161,6 +180,9 @@ public class booking extends AppCompatActivity {
         address.setText(split[2]);
         pricing.setText("₹" + split[4] + "/hour");
         location_price = Integer.parseInt(split[4]);
+
+        //save the data to upload onto firebase if the user decides to book the location
+        user_address = split[2];
     }
 
     @Override
@@ -180,4 +202,21 @@ public class booking extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onSelectedTime(int hourStart, int minuteStart, int hourEnd, int minuteEnd) {
+        //calculating price
+        int total_hours = hourEnd - hourStart;
+
+        String timeString = hourStart + ":" + minuteStart + " - " + hourEnd + ":" + minuteEnd;
+        display_time.setText(timeString);
+
+        total_price.setVisibility(View.VISIBLE);
+        total_price.setText("Duration : " + total_hours + " hours\nTotal price : ₹" + total_hours * location_price + " ");
+
+        //for firebase
+        was_time_range_selected = true;
+        user_time_start = hourStart + ":" + minuteStart;
+        user_time_end = hourEnd + ":" + minuteEnd;
+    }
 }

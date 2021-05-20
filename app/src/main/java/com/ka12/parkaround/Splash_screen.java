@@ -33,7 +33,7 @@ public class Splash_screen extends AppCompatActivity {
 
         //getting the login details
         SharedPreferences getlogin = getSharedPreferences(LOGIN, MODE_PRIVATE);
-        is_logged_in = getlogin.getBoolean("is_login", true);
+        is_logged_in = getlogin.getBoolean("is_login", false);
 
         //delaying the next activity by 2 seconds
         new Handler().postDelayed(() -> {

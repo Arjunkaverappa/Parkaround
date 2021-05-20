@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,6 +44,7 @@ import java.util.Objects;
 public class frag_add_land extends Fragment {
     public static final String PHONE_NUMBER = "com.ka12.parkaround.this_is_where_phone_number_of_a_user_is_saved";
     public static final String IS_LAND_ADDED = "com.ka12.parkaround.this_is_where_boolean_of_is_place_added_is_saved";
+    public static final String LAND_ADDRESS = "com.ka12.parkaround.this_is_where_address_of_the_land_is_saved";
     // public static final String LAND_ADDRESS = "com.ka12.parkaround.this_is_where_parking_address_is_saved";
     LinearLayout add_dialog, enter_details_layout;
     CardView add_location, enter_location_card, add_address;// , use_location;
@@ -54,7 +56,9 @@ public class frag_add_land extends Fragment {
     //database
     FirebaseDatabase firebaseDatabase;
     DatabaseReference reference;
+    TextView add_address_text;
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,6 +76,7 @@ public class frag_add_land extends Fragment {
         pincode = v.findViewById(R.id.pincode);
         near_to = v.findViewById(R.id.near_to);
         price = v.findViewById(R.id.price);
+        add_address_text = v.findViewById(R.id.add_address_text);
 
         //hiding the enter location card
         enter_location_card.setVisibility(View.GONE);
@@ -104,18 +109,20 @@ public class frag_add_land extends Fragment {
             //the details will be taken here
             if (!Objects.requireNonNull(road_colony_area.getText()).toString().equals("")
                     || !Objects.requireNonNull(house_or_building.getText()).toString().equals("")
-                    || near_to.getText().toString().equals("")
+                    || Objects.requireNonNull(near_to.getText()).toString().equals("")
                     || !Objects.requireNonNull(pincode.getText()).toString().equals("")
-                    || price.getText().toString().equals("")) {
-                address_near_to = near_to.getText().toString().trim();
+                    || Objects.requireNonNull(price.getText()).toString().equals("")) {
+                address_near_to = Objects.requireNonNull(near_to.getText()).toString().trim();
                 user_house_or_build = Objects.requireNonNull(house_or_building.getText()).toString().trim();
                 user_road_or_col = road_colony_area.getText().toString().trim();
                 user_pincode = Objects.requireNonNull(pincode.getText()).toString().trim();
-                user_price = price.getText().toString().trim();
+                user_price = Objects.requireNonNull(price.getText()).toString().trim();
+
+                add_address_text.setText("Loading...");
 
                 final_address = "Near " + address_near_to + ", " + user_house_or_build + ", " + user_road_or_col + ", " + city + ", karnataka. " + user_pincode;
+                //the process of adding location starts from checking permission
                 check_permission();
-
             } else {
                 Toast.makeText(getActivity(), "Enter all the details", Toast.LENGTH_SHORT).show();
             }
@@ -224,6 +231,10 @@ public class frag_add_land extends Fragment {
             //updating the is land added flag in shared preferences
             SharedPreferences.Editor set_added = getActivity().getSharedPreferences(IS_LAND_ADDED, Context.MODE_PRIVATE).edit();
             set_added.putBoolean("is_added", true).apply();
+
+            //updating land address in shared preferences
+            SharedPreferences.Editor set_address = getActivity().getSharedPreferences(LAND_ADDRESS, Context.MODE_PRIVATE).edit();
+            set_address.putString("user_address", final_address).apply();
 
             //returning to main sceen after adding
             FragmentManager fm = getActivity().getSupportFragmentManager();

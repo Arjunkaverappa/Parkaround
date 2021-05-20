@@ -29,6 +29,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -100,8 +101,23 @@ public class MapsFragment extends Fragment {
                 default:
                     mymap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             }
-            mymap.setIndoorEnabled(true);
-            mymap.setBuildingsEnabled(true);
+
+            mymap.setOnMarkerClickListener(marker -> {
+                String which_marker = marker.getTitle();
+                for (int i = 0; i < availabe_locations.size(); i++) {
+                    String[] split_it = availabe_locations.get(i).split("\\#");
+                    if (which_marker != null && which_marker.equals(split_it[2])) {
+                        //setting up onlick listeners
+                        Intent go_to_booking = new Intent(getActivity(), booking.class);
+                        go_to_booking.putExtra("details", availabe_locations.get(i));
+                        startActivity(go_to_booking);
+                        Animatoo.animateZoom(Objects.requireNonNull(getContext()));
+                    }
+                }
+                return true;
+            });
+            //mymap.setIndoorEnabled(true);
+            // mymap.setBuildingsEnabled(true);
             check_permission();
         }
     };
@@ -193,9 +209,6 @@ public class MapsFragment extends Fragment {
                     user_latitude = location.getLatitude();
                     user_longitude = location.getLongitude();
                 } else {
-                    //disabled for now
-                    //mymap.setMyLocationEnabled(true);
-
                     //when location is null we initialize location request
                     //this is where the actual location is fetched from
                     LocationRequest locationRequest = new LocationRequest()
@@ -219,6 +232,7 @@ public class MapsFragment extends Fragment {
                 }
                 //fetching the location from firebase
                 get_location_from_firebase();
+                mymap.setMyLocationEnabled(true);
             });
         } else {
             open_settings_and_turn_on_location();
@@ -354,8 +368,11 @@ public class MapsFragment extends Fragment {
 
     public void set_the_marker(Double lat, Double lon, String address) {
         LatLng mylocation = new LatLng(lat, lon);
-        mymap.addMarker(new MarkerOptions().position(mylocation).title(address));
-        mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 12));
+        mymap.addMarker(new MarkerOptions()
+                .position(mylocation)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                .title(address));
+        mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 13));
     }
 
     public void reset_map() {
@@ -366,13 +383,17 @@ public class MapsFragment extends Fragment {
 
         //NOTE: mymap variable is not an arraylist, its a GoogleMap instance
         mymap.clear();
-
+        /*
         if (user_longitude != null && user_latitude != null) {
             LatLng mylocation = new LatLng(user_latitude, user_longitude);
-            mymap.addMarker(new MarkerOptions().position(mylocation).title("My location")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+            mymap.addMarker(new MarkerOptions()
+                    .position(mylocation)
+                    .title("My location")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
             mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 12));
         }
+
+         */
     }
 }
 /*

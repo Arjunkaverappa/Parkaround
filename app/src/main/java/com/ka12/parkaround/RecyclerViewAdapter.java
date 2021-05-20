@@ -11,10 +11,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import io.armcha.elasticview.ElasticView;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
@@ -77,7 +78,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView address, active_status, pricing;
-        CardView location_card;
+        // CardView location_card;
+        ElasticView location_card;
 
         //declare all the views from custom location_lists
         public ViewHolder(@NonNull View itemView) {

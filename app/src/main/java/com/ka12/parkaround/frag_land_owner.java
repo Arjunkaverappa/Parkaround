@@ -128,12 +128,21 @@ public class frag_land_owner extends Fragment {
             }
         });
 
+        //testing
+        active_status.setOnLongClickListener(v1 -> {
+            //checking if the place is added by the land owner or not
+            SharedPreferences.Editor get_place1 = Objects.requireNonNull(getActivity()).getSharedPreferences(IS_LAND_ADDED, Context.MODE_PRIVATE).edit();
+            get_place1.putBoolean("is_added", false).apply();
+            Toast.makeText(getActivity(), "Done", Toast.LENGTH_SHORT).show();
+            return true;
+        });
+
         return v;
     }
 
     public void vibrate_phone() {
-        Vibrator v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(50);
+        Vibrator v = (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(65);
     }
 
     public void change_the_is_active_status(Boolean change_to) {
@@ -147,7 +156,7 @@ public class frag_land_owner extends Fragment {
             String[] split = user_address_from_firebase.split("\\#");
             firebaseDatabase = FirebaseDatabase.getInstance();
             reference = firebaseDatabase.getReference().child("LOCATIONS").child(user_phone_number);
-            reference.setValue(split[0] + "#" + split[1] + "#" + split[2] + "#" + result)
+            reference.setValue(split[0] + "#" + split[1] + "#" + split[2] + "#" + result + "#" + split[4])
                     .addOnCompleteListener(task ->
                             Toast.makeText(getActivity(), "Location set successfully", Toast.LENGTH_SHORT).show());
 
@@ -165,7 +174,7 @@ public class frag_land_owner extends Fragment {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 data_from_firebase = snapshot.getValue(String.class);
-                if (snapshot.getKey().equals(user_phone_number)) {
+                if (Objects.equals(snapshot.getKey(), user_phone_number)) {
                     Log.e("set_map", "data from firebase :" + data_from_firebase);
                     //copy the data into another string
                     user_address_from_firebase = data_from_firebase;
@@ -239,7 +248,7 @@ public class frag_land_owner extends Fragment {
             Log.d("zoom", "checking network");
             new Handler().postDelayed(() ->
             {
-                ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                ConnectivityManager connectivityManager = (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo wifi_conn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                 NetworkInfo data_conn = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
                 if ((wifi_conn != null && wifi_conn.isConnected()) || (data_conn != null && data_conn.isConnected())) {

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".add_vehicle">
+    tools:context=".frag_add_vehicle">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

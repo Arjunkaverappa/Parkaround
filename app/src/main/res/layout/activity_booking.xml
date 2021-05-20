@@ -61,9 +61,10 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/set_time"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
+                android:backgroundTint="#97FAF0"
                 android:clickable="true"
                 app:cardCornerRadius="15dp"
                 app:cardElevation="10dp">
@@ -72,7 +73,7 @@
                     android:id="@+id/display_time"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#97FAF0"
+                    android:layout_margin="10dp"
                     android:gravity="center"
                     android:text="@string/set_timings"
                     android:textSize="20sp"
@@ -91,25 +92,23 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/book_location"
+            <ng.max.slideview.SlideView
+                android:id="@+id/swipe"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:clickable="true"
-                app:cardCornerRadius="15dp"
-                app:cardElevation="10dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/teal_200"
-                    android:gravity="center"
-                    android:text="@string/book_location"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-            </androidx.cardview.widget.CardView>
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="20dp"
+                app:sv_animateSlideText="true"
+                app:sv_buttonBackgroundColor="@color/white"
+                app:sv_buttonImage="@drawable/ic_double_arrow_24"
+                app:sv_reverseSlide="false"
+                app:sv_slideBackgroundColor="#EF6767"
+                app:sv_slideText="Swipe to book location"
+                app:sv_slideTextColor="@color/white"
+                app:sv_slideTextSize="16sp"
+                app:sv_strokeColor="@color/white" />
 
         </LinearLayout>
 

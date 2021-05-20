@@ -6,192 +6,209 @@
     android:layout_height="match_parent"
     tools:context=".frag_services">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:context=".frag_services">
+        android:layout_height="wrap_content">
 
-        <!--this is for fuel prices-->
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/fuel_card"
+        <TextView
+            android:id="@+id/one"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:backgroundTint="#8C56EC"
-            android:clickable="true"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="30dp">
+            android:layout_height="70dp"
+            android:background="#FFFFFF"
+            android:gravity="center|top"
+            android:paddingStart="15dp"
+            android:paddingTop="10dp"
+            android:text="@string/services"
+            android:textColor="#4E4E4E"
+            android:textSize="33sp"
+            android:textStyle="bold"
+            tools:ignore="RtlSymmetry" />
 
-            <RelativeLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="70dp"
+            tools:context=".frag_services">
+
+            <!--this is for fuel prices-->
+            <io.armcha.elasticview.ElasticView
+                android:id="@+id/fuel_card"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="160dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="#8C56EC"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="30dp"
+                app:flexibility="10">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="200dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:backgroundTint="#3FF37B"
-                    app:cardCornerRadius="15dp"
-                    app:cardElevation="10dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                    <TextView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="200dp"
                         android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
-                        android:gravity="center"
-                        android:text="@string/check_fuel_prices"
-                        android:textColor="@color/white"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
+                        android:backgroundTint="#3FF37B"
+                        app:cardCornerRadius="15dp"
+                        app:cardElevation="10dp">
 
-                </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="200dp"
+                            android:layout_height="50dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="center"
+                            android:text="@string/check_fuel_prices"
+                            android:textColor="@color/white"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
 
-            </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+                </RelativeLayout>
+            </io.armcha.elasticview.ElasticView>
 
-        </androidx.cardview.widget.CardView>
+            <!--this is for traffic rules -->
 
-        <!--this is for traffic rules -->
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/traffic_card"
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_margin="10dp"
-            android:backgroundTint="#3FF37B"
-            android:clickable="true"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="30dp">
-
-            <RelativeLayout
+            <io.armcha.elasticview.ElasticView
+                android:id="@+id/traffic_card"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="160dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="#3FF37B"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="30dp"
+                app:flexibility="10">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="200dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:backgroundTint="#EC9756"
-                    app:cardCornerRadius="15dp"
-                    app:cardElevation="10dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                    <TextView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="200dp"
                         android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
-                        android:gravity="center"
-                        android:text="@string/check_traffic_rules"
-                        android:textColor="@color/white"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
+                        android:backgroundTint="#EC9756"
+                        app:cardCornerRadius="15dp"
+                        app:cardElevation="10dp">
 
-                </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="200dp"
+                            android:layout_height="50dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="center"
+                            android:text="@string/check_fuel_prices"
+                            android:textColor="@color/white"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
 
-            </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+                </RelativeLayout>
+            </io.armcha.elasticview.ElasticView>
 
+            <!--this is for remiander alerts -->
 
-        </androidx.cardview.widget.CardView>
-
-        <!--this is for remiander alerts -->
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/remainder_card"
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_margin="10dp"
-            android:backgroundTint="#EC9756"
-            android:clickable="true"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="30dp">
-
-            <RelativeLayout
+            <io.armcha.elasticview.ElasticView
+                android:id="@+id/remainder_card"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="160dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="#EC9756"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="30dp"
+                app:flexibility="10">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="200dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:backgroundTint="#F64F4B"
-                    app:cardCornerRadius="15dp"
-                    app:cardElevation="10dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                    <TextView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="200dp"
                         android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
-                        android:gravity="center"
-                        android:text="@string/set_remianders"
-                        android:textColor="@color/white"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-                </androidx.cardview.widget.CardView>
+                        android:backgroundTint="#F64F4B"
+                        app:cardCornerRadius="15dp"
+                        app:cardElevation="10dp">
 
-            </RelativeLayout>
+                        <TextView
+                            android:layout_width="200dp"
+                            android:layout_height="50dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="center"
+                            android:text="@string/check_fuel_prices"
+                            android:textColor="@color/white"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
 
-        </androidx.cardview.widget.CardView>
+                    </androidx.cardview.widget.CardView>
+                </RelativeLayout>
+            </io.armcha.elasticview.ElasticView>
 
-        <!--this is for pollution control centers -->
+            <!--this is for pollution control centers -->
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/emission_card"
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="100dp"
-            android:backgroundTint="#F64F4B"
-            android:clickable="true"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="30dp">
-
-            <RelativeLayout
+            <io.armcha.elasticview.ElasticView
+                android:id="@+id/emission_card"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="160dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="80dp"
+                android:backgroundTint="#F64F4B"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="30dp"
+                app:flexibility="10">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="200dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:backgroundTint="#8C56EC"
-                    app:cardCornerRadius="15dp"
-                    app:cardElevation="10dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                    <TextView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="200dp"
                         android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
-                        android:gravity="center"
-                        android:text="@string/emission_control"
-                        android:textColor="@color/white"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-                </androidx.cardview.widget.CardView>
+                        android:backgroundTint="#8C56EC"
+                        app:cardCornerRadius="15dp"
+                        app:cardElevation="10dp">
 
-            </RelativeLayout>
+                        <TextView
+                            android:layout_width="200dp"
+                            android:layout_height="50dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="center"
+                            android:text="@string/check_fuel_prices"
+                            android:textColor="@color/white"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
 
-        </androidx.cardview.widget.CardView>
+                    </androidx.cardview.widget.CardView>
+                </RelativeLayout>
+            </io.armcha.elasticview.ElasticView>
 
-    </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 </ScrollView>

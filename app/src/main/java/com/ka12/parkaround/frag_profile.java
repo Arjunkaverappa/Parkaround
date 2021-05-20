@@ -23,13 +23,14 @@ public class frag_profile extends Fragment {
 
         settings_vard.setOnClickListener(v1 -> {
             //something
-            Toast.makeText(getActivity(), "land", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
         });
 
         land_card.setOnClickListener(v12 -> {
             //opening host land
             startActivity(new Intent(getActivity(), host_land.class));
         });
+
         return v;
     }
 }

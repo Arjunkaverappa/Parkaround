@@ -37,5 +37,8 @@
     <string name="near_to_shop_complex_landmark">Near to shop/complex/landmark</string>
     <string name="pricing_info">max  ₹99/hour \nmin  ₹10/hour</string>
     <string name="price">Price/Hour</string>
-    <string name="set_timings">Set Timings</string>
+    <string name="set_timings">Select Timings</string>
+    <string name="services">Services</string>
+    <string name="new_booking">New booking</string>
+    <string name="go_to_booking">Confirm booking</string>
 </resources>
