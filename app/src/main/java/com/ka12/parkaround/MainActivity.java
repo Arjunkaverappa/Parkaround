@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference reference;
     //to check booking
     String user_phone_number, user_address;
+    //the following are in the booking custom view
     TextView cancel_btn, vehicle_name, vehicle_number, vehicle_timings, btn_next;
     CardView booking_layout;
 
@@ -76,8 +77,7 @@ public class MainActivity extends AppCompatActivity {
         // check_permission();
 
         //checking if the internet service is enabled or not
-        //TODO enable it
-        //check_network();
+        check_network();
 
         //setting up bottom navigationbar to the middle element
         bottombar.setCurrentActiveItem(1);
@@ -137,15 +137,6 @@ public class MainActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
-    public void check_permission() {
-        //checking permission if the location is granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //permission not granted, asking for permission
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -157,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void check_network() {
-        //TODO set up wherever required
         try {
             Log.d("zoom", "checking network");
             new Handler().postDelayed(() ->
@@ -171,13 +161,13 @@ public class MainActivity extends AppCompatActivity {
                     is_connected = false;
                     AlertDialog.Builder b = new AlertDialog.Builder(this);
                     b.setTitle("Disclaimer");
-                    b.setMessage("Please turn on internet");
+                    b.setMessage("Please check your network connection");
                     b.setPositiveButton("OK", (dialog, which) -> {
                         //here is the set positive button
 
                     });
                     b.show();
-                    check_network();
+                    //check_network();
                 }
             }, 5000);
         } catch (Exception e) {
@@ -204,13 +194,13 @@ public class MainActivity extends AppCompatActivity {
             5) time start
             6) time end
          */
-
-
+        //checking if any booking has arrived
         firebaseDatabase = FirebaseDatabase.getInstance();
         reference = firebaseDatabase.getReference().child("BOOKINGS");
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                /*
                 // String key=snapshot.getKey();
                 String data = snapshot.getValue(String.class);
                 if (data != null) {
@@ -218,6 +208,18 @@ public class MainActivity extends AppCompatActivity {
                     //comparing address
                     if (user_address.equals(split[4])) {
                         Log.d("tempo", data);
+                        show_booking_arrived(data);
+                    }
+                }
+                 */
+
+                String key = snapshot.getKey();
+                Log.e("temp", key + " and user phone : " + user_phone_number);
+                if (user_phone_number.equals(key)) {
+                    String data = snapshot.getValue(String.class);
+                    if (data != null) {
+                        //setting up booking arrived cardview
+                        Log.e("temp", data);
                         show_booking_arrived(data);
                     }
                 }
@@ -255,27 +257,45 @@ public class MainActivity extends AppCompatActivity {
             4) user address
             5) time start
             6) time end
+            7) booking_guy_phone_number(key)
          */
         Log.d("tempo", "running");
         booking_layout.setVisibility(View.VISIBLE);
         String[] split = data.split("\\#");
+        vehicle_name.setText("Vehicle  :" + split[2] + " " + split[1] + " (" + split[3] + ")");
+        vehicle_number.setText("Number :" + split[0]);
+        vehicle_timings.setText("Timings :From " + split[5] + " To " + split[6]);
+
+        //booking cancel
         cancel_btn.setOnClickListener(v -> {
             AlertDialog.Builder b = new AlertDialog.Builder(MainActivity.this);
             b.setTitle("Disclaimer");
             b.setMessage("Do you want to cancel this booking request?");
-            b.setPositiveButton("Yes", (dialog, which) ->
-                    //TODO:remove the booking from firebase
-                    booking_layout.setVisibility(View.GONE));
+            b.setPositiveButton("yes", (dialog, which) -> {
+                //Remove the booking from firebase
+                booking_layout.setVisibility(View.GONE);
+                cancel_the_booking(split[7]);
+            });
             b.setNegativeButton("No", (dialog, which) -> {
             });
             b.show();
         });
-        vehicle_name.setText(split[2] + " " + split[1] + " (" + split[3] + ")");
-        vehicle_number.setText(split[0]);
-        vehicle_timings.setText(split[5] + " to " + split[6]);
+        //booking confirm
         btn_next.setOnClickListener(v -> {
             //go next
             Toast.makeText(MainActivity.this, "submit", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    public void cancel_the_booking(String phone_number) {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        reference = firebaseDatabase.getReference().child("BOOKINGS").child(phone_number);
+        reference.removeValue().addOnCompleteListener(task -> {
+            //node deleted
+            Toast.makeText(MainActivity.this, "Booking canceled", Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(e -> {
+            //error handler
+            Toast.makeText(MainActivity.this, "ERROR : " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -286,6 +306,16 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
             back_pressed = System.currentTimeMillis();
+        }
+    }
+
+    //currently not used
+    public void check_permission() {
+        //checking permission if the location is granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //permission not granted, asking for permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
         }
     }
 }

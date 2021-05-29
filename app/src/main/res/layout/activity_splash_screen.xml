@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Splash_screen">
 
-    <com.airbnb.lottie.LottieAnimationView
+    <ImageView
+        android:id="@+id/logo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
+        android:layout_margin="25dp"
         android:layout_centerInParent="true"
-        app:lottie_rawRes="@raw/anim_login_parking_test1" />
+        android:contentDescription="@string/app_name"
+        android:src="@mipmap/a_logo_one" />
 
 </RelativeLayout>

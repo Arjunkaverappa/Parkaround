@@ -14,11 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mcsoft.timerangepickerdialog.RangeTimePickerDialog;
@@ -139,24 +144,25 @@ public class booking extends AppCompatActivity implements RangeTimePickerDialog.
         user_vehicle_details = get_vehicle.getString("user_vehicle", "something went wrong");
 
         //the final input sent to firebase
-        String input_text = user_vehicle_details + "#" + user_address + "#" + user_time_start + "#" + user_time_end;
+        String input_text = user_vehicle_details + "#" + user_address + "#" + user_time_start + "#" + user_time_end + "#" + user_phone_number;
 
          /*
-            1) vehicle number
-            2) vehicle model
-            3) manufacturer
-            4) color            (<-from user_vehicle_details)
-            5) user address
+            0) vehicle number
+            1) vehicle model
+            2) manufacturer
+            3) color
+            4) user address
             5) time start
             6) time end
+            7) booking_guy_phone_number(key)
          */
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         reference = firebaseDatabase.getReference().child("BOOKINGS");
         reference.child(user_phone_number).setValue(input_text).addOnCompleteListener(task -> {
             //update the is_active_status in firebase for revelent field
-            Toast.makeText(this, "Location booked!", Toast.LENGTH_SHORT).show();
-            change_the_values_in_database();
+            //this is to change the active status of the location booked, firstly get the address
+            get_the_address();
         }).addOnFailureListener(e -> {
             //on failure listener
             Toast.makeText(booking.this, "Something went wrong : ERROR :" + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -164,8 +170,19 @@ public class booking extends AppCompatActivity implements RangeTimePickerDialog.
 
     }
 
-    public void change_the_values_in_database() {
-        //TODO change active status
+    public void change_the_values_in_database(String user_address_from_firebase) {
+        //setting active status to busy
+        if (user_address_from_firebase != null) {
+            String[] split = user_address_from_firebase.split("\\#");
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            reference = firebaseDatabase.getReference().child("LOCATIONS").child(user_phone_number);
+            reference.setValue(split[0] + "#" + split[1] + "#" + split[2] + "#" + "busy" + "#" + split[4])
+                    .addOnCompleteListener(task ->
+                            Toast.makeText(this, "Location booked!", Toast.LENGTH_SHORT).show());
+
+        } else {
+            Toast.makeText(this, "NullPointerException from firebase...", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -218,5 +235,42 @@ public class booking extends AppCompatActivity implements RangeTimePickerDialog.
         was_time_range_selected = true;
         user_time_start = hourStart + ":" + minuteStart;
         user_time_end = hourEnd + ":" + minuteEnd;
+    }
+
+    public void get_the_address() {
+        Log.e("set_map", "initiated with " + user_phone_number);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        reference = firebaseDatabase.getReference().child("LOCATIONS");//.child(user_phone_number.trim());
+        reference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String data_from_firebase = snapshot.getValue(String.class);
+                if (Objects.equals(snapshot.getKey(), user_phone_number)) {
+                    Log.e("set_map", "data from firebase :" + data_from_firebase);
+                    //copy the data into another string
+                    change_the_values_in_database(data_from_firebase);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                get_the_address();
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                get_the_address();
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                get_the_address();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                get_the_address();
+            }
+        });
     }
 }

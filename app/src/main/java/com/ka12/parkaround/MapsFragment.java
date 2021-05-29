@@ -76,10 +76,10 @@ public class MapsFragment extends Fragment {
     ArrayList<String> availabe_locations = new ArrayList<>();
     ProgressBar progressBar;
     Integer count = 0;
-    Integer map_count = 0;
     //recycler view
     RecyclerView recyclerView;
     RecyclerViewAdapter recyclerViewAdapter;
+
     public final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(@NotNull GoogleMap googleMap) {
@@ -187,7 +187,6 @@ public class MapsFragment extends Fragment {
         }
     }
 
-
     @SuppressLint("MissingPermission")
     public void fetch_the_location() {
         Log.e("result", "fetch the location initiated");
@@ -249,10 +248,9 @@ public class MapsFragment extends Fragment {
             //  get_location_from_firebase();
         } else {
             //ask for the permission
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}
-                    , 100);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
             //check the on request permisiion result
-            Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
             //we shall use loop to check for permission repeatedly
             new Handler().postDelayed(this::check_permission, 7000);
         }

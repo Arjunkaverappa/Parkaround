@@ -55,6 +55,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (split[3].equals("yes")) {
             holder.active_status.setText("Currently active");
             holder.active_status.setTextColor(Color.GREEN);
+        } else if (split[3].equals("busy")) {
+            holder.active_status.setText("Currently occupied");
+            holder.active_status.setTextColor(Color.BLUE);
         } else {
             holder.active_status.setText("Currently Inactive");
             holder.active_status.setTextColor(Color.RED);

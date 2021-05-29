@@ -110,7 +110,7 @@
                             android:layout_marginEnd="10dp"
                             android:layout_marginBottom="10dp"
                             android:gravity="center"
-                            android:text="@string/check_fuel_prices"
+                            android:text="@string/check_traffic_rules"
                             android:textColor="@color/white"
                             android:textSize="22sp"
                             android:textStyle="bold" />
@@ -155,7 +155,7 @@
                             android:layout_marginEnd="10dp"
                             android:layout_marginBottom="10dp"
                             android:gravity="center"
-                            android:text="@string/check_fuel_prices"
+                            android:text="@string/set_remianders"
                             android:textColor="@color/white"
                             android:textSize="22sp"
                             android:textStyle="bold" />
@@ -200,7 +200,7 @@
                             android:layout_marginEnd="10dp"
                             android:layout_marginBottom="10dp"
                             android:gravity="center"
-                            android:text="@string/check_fuel_prices"
+                            android:text="@string/emission_control"
                             android:textColor="@color/white"
                             android:textSize="22sp"
                             android:textStyle="bold" />

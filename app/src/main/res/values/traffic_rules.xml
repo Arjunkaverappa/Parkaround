@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="traffic_rules_final">
+        Traffic signs tell you about traffic rules, hazards, where
+you are, how to get where you are going, and where services
+are located. The shape and color of these signs give clues
+to the type of information they provide.\n\n
+
+        There are traffic rules that say where, when and how fast
+you can drive. These rules help to keep traffic moving safely.
+Rules of the road include traffic controls, lane controls, rightof-way laws, and parking rules.\n\n
+
+        Traffic controls include traffic signals, traffic signs and
+pavement markings. Traffic control also can be provided
+by law enforcement, highway personnel or school crossing
+guards. You must obey directions from these persons.\n\n
+
+        Red\n
+Stop, yield or do what is shown on the sign.\n\n
+
+Green\n
+Direction. These signs indicate where a place is,
+or how far a place is from where you are.\n\n
+
+Blue\n
+Services for travelers. These signs direct you to
+places such as rest areas, tourist sites, hospitals,
+hotels, gas stations, eating places, campgrounds
+or picnic areas.\n\n
+
+Yellow\n
+General warning.\n\n
+
+Fluorescent Yellow-Green\n
+Pedestrian, bicycle and school warning signs.
+The new color for these signs is much easier to
+see in low light and foggy/rainy weather.\n\n
+
+White\n
+These signs include information regarding
+enforceable laws and ordinances.\n\n
+
+Orange\n
+Road work, temporary traffic control, and
+maintenance warnings. Be sure to watch for
+workers on the road.\n\n
+
+Brown\n
+Recreation and cultural points of interest. These
+signs point out historical sites, parks or recreational areas.\n\n
+
+        Standard Shapes\n\n
+Octagon - Stop\n
+Come to a full stop at an intersection
+controlled by this sign. Stop at the
+marked stop line or before entering
+the crosswalk or before your vehicle
+enters the intersection. Let other
+vehicles or pedestrians pass if they
+are in your path.\n\n
+
+Equilateral triangle\n
+Yield the right of way. Slow down
+and let vehicles crossing your path
+go by. If necessary, stop before
+going ahead. If pedestrians are in
+or about to enter the crosswalk,
+stop until they have crossed the
+roadway, then proceed.\n\n
+
+Pennant\n
+This sign will be on the left-hand
+side of the road or highway. It warns
+you of a no passing zone.\n\n
+
+Diamond\n
+Warning. These signs alert you to
+special road hazards. Words or
+pictures on the sign will show you
+why you need to slow down or use
+extra caution.\n\n
+
+Rectangle\n
+Regulatory or guide. Vertical
+signs indicate what you should or
+should not do. Horizontal signs
+give directions or information
+about services drivers may want.\n\n
+
+Pentagon\n
+School crossing. Signs mark school
+areas and school crossings. The
+color of this sign may also be yellow.\n\n
+
+Crossbuck\n
+Railroad crossing signs are placed
+at each crossing. A number sign
+under the crossbucks shows how
+many sets of train tracks you must
+cross.\n\n
+
+Circle\n
+Railroad crossing ahead. These
+signs give you early warning of
+railroad crossings.\n\n
+
+    </string>
+</resources>

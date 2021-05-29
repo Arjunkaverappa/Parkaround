@@ -15,11 +15,13 @@ import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 public class Splash_screen extends AppCompatActivity {
     public static final String LOGIN = "com.ka12.parkaround.this_is_where_login_details_are_saved";
     Boolean is_logged_in;
+    //ImageView logo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+        //logo = findViewById(R.id.logo);
 
         //changing status bar color
         Window window = getWindow();
@@ -34,6 +36,8 @@ public class Splash_screen extends AppCompatActivity {
         //getting the login details
         SharedPreferences getlogin = getSharedPreferences(LOGIN, MODE_PRIVATE);
         is_logged_in = getlogin.getBoolean("is_login", false);
+
+        // YoYo.with(Techniques.ZoomIn).duration(1100).repeat(0);
 
         //delaying the next activity by 2 seconds
         new Handler().postDelayed(() -> {

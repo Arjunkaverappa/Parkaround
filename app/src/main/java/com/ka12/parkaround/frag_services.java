@@ -1,5 +1,6 @@
 package com.ka12.parkaround;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +9,11 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+
 import io.armcha.elasticview.ElasticView;
 
 public class frag_services extends Fragment {
-    // CardView fuel_card, emission_card, traffic_card, remainder_card;
     ElasticView fuel_card, emission_card, traffic_card, remainder_card;
 
     @Override
@@ -24,6 +26,7 @@ public class frag_services extends Fragment {
         traffic_card = v.findViewById(R.id.traffic_card);
         remainder_card = v.findViewById(R.id.remainder_card);
 
+        Intent in = new Intent(getActivity(), service_activity.class);
         fuel_card.setOnClickListener(v1 -> {
             //redirecting
             Toast.makeText(getActivity(), "coming soon", Toast.LENGTH_SHORT).show();
@@ -31,7 +34,9 @@ public class frag_services extends Fragment {
 
         traffic_card.setOnClickListener(v1 -> {
             //redirecting
-            Toast.makeText(getActivity(), "coming soon", Toast.LENGTH_SHORT).show();
+            in.putExtra("service", "traffic");
+            startActivity(in);
+            Animatoo.animateZoom(getContext());
         });
 
         remainder_card.setOnClickListener(v1 -> {

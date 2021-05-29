@@ -12,14 +12,14 @@
         android:id="@+id/frag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="55dp"
         android:orientation="vertical" />
-
 
     <androidx.cardview.widget.CardView
         android:id="@+id/booking_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         app:cardCornerRadius="20dp">
 
         <include

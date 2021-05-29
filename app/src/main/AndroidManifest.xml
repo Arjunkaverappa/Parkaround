@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ka12.parkaround">
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -21,15 +29,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Parkaround"
         tools:ignore="AllowBackup">
-        <activity android:name=".host_land">
-
-        </activity>
-        <activity android:name=".booking">
-
-        </activity>
-        <activity android:name=".login">
-
-        </activity>
+        <activity android:name=".service_activity"></activity>
+        <activity android:name=".host_land"></activity>
+        <activity android:name=".booking"></activity>
+        <activity android:name=".login"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
