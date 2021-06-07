@@ -17,7 +17,7 @@
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/anim"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="200dp"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="0dp"
             app:lottie_autoPlay="true"
@@ -62,6 +62,30 @@
                         android:textColorHint="#8E8D8D"
                         android:textSize="18sp"
                         tools:ignore="Autofill" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/custom_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    app:boxCornerRadiusBottomEnd="30dp"
+                    app:boxCornerRadiusBottomStart="30dp"
+                    app:boxCornerRadiusTopEnd="30dp"
+                    app:boxCornerRadiusTopStart="30dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/user_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:hint="@string/enter_your_email_id"
+                        android:inputType="text"
+                        android:maxLength="50"
+                        android:textColorHint="#8E8D8D"
+                        android:textSize="18sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout

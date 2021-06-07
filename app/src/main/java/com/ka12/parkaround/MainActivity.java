@@ -1,6 +1,5 @@
 package com.ka12.parkaround;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -25,7 +24,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.gauravk.bubblenavigation.BubbleNavigationConstraintView;
@@ -52,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     //the following are in the booking custom view
     TextView cancel_btn, vehicle_name, vehicle_number, vehicle_timings, btn_next;
     CardView booking_layout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,9 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
         set_up_action_and_status_bar();
 
-        //checking if the location services are enabled or not
-        //TODO enable it
-        // check_permission();
+        //checking if the location services are enabled or not (currently disabled)
+        //check_permission();
 
         //checking if the internet service is enabled or not
         check_network();
@@ -308,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
             back_pressed = System.currentTimeMillis();
         }
     }
-
+    /*
     //currently not used
     public void check_permission() {
         //checking permission if the location is granted
@@ -318,4 +314,6 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
         }
     }
+
+     */
 }

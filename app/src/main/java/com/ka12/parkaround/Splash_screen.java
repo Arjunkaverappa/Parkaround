@@ -9,6 +9,7 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 
@@ -20,6 +21,7 @@ public class Splash_screen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_splash_screen);
         //logo = findViewById(R.id.logo);
 
@@ -33,7 +35,7 @@ public class Splash_screen extends AppCompatActivity {
         assert ab != null;
         ab.hide();
 
-        //getting the login details
+        //getting the login details (default false)
         SharedPreferences getlogin = getSharedPreferences(LOGIN, MODE_PRIVATE);
         is_logged_in = getlogin.getBoolean("is_login", false);
 

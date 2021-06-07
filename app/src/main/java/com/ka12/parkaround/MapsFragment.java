@@ -54,7 +54,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import jahirfiquitiva.libs.fabsmenu.FABsMenu;
 import jahirfiquitiva.libs.fabsmenu.TitleFAB;
@@ -87,7 +86,7 @@ public class MapsFragment extends Fragment {
             mymap = googleMap;
             //retrieving the maps activity
             //TODO : reset the preference while exiting the app
-            SharedPreferences get_map_type = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE);
+            SharedPreferences get_map_type = getActivity().getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE);
             switch (get_map_type.getString("type", "none")) {
                 case "satellite":
                     mymap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
@@ -101,7 +100,8 @@ public class MapsFragment extends Fragment {
                 default:
                     mymap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             }
-
+           /*
+           //this opens the booking activity when the marker is clicked
             mymap.setOnMarkerClickListener(marker -> {
                 String which_marker = marker.getTitle();
                 for (int i = 0; i < availabe_locations.size(); i++) {
@@ -111,10 +111,25 @@ public class MapsFragment extends Fragment {
                         Intent go_to_booking = new Intent(getActivity(), booking.class);
                         go_to_booking.putExtra("details", availabe_locations.get(i));
                         startActivity(go_to_booking);
-                        Animatoo.animateZoom(Objects.requireNonNull(getContext()));
+                        Animatoo.animateZoom(getContext());
                     }
                 }
                 return true;
+            });
+            */
+            mymap.setOnInfoWindowClickListener(marker -> {
+                //funtion
+                String which_marker = marker.getTitle();
+                for (int i = 0; i < availabe_locations.size(); i++) {
+                    String[] split_it = availabe_locations.get(i).split("\\#");
+                    if (which_marker != null && which_marker.equals(split_it[2])) {
+                        //setting up onlick listeners
+                        Intent go_to_booking = new Intent(getActivity(), booking.class);
+                        go_to_booking.putExtra("details", availabe_locations.get(i));
+                        startActivity(go_to_booking);
+                        Animatoo.animateZoom(getContext());
+                    }
+                }
             });
             //mymap.setIndoorEnabled(true);
             // mymap.setBuildingsEnabled(true);
@@ -135,14 +150,14 @@ public class MapsFragment extends Fragment {
         TitleFAB satellite_mode = v.findViewById(R.id.third_icon);
         TitleFAB noraml = v.findViewById(R.id.normal);
         noraml.setOnClickListener(view -> {
-            SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
+            SharedPreferences.Editor setMap = getActivity().getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
             setMap.putString("type", "noramal").apply();
             FragmentManager fm = getActivity().getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.frag, new MapsFragment()).commit();
         });
         satellite_mode.setOnClickListener(view ->
                 {
-                    SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
+                    SharedPreferences.Editor setMap = getActivity().getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
                     setMap.putString("type", "satellite").apply();
                     mymap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                     fab.collapse();
@@ -150,14 +165,14 @@ public class MapsFragment extends Fragment {
         );
         terrian_mode.setOnClickListener(view ->
                 {
-                    SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
+                    SharedPreferences.Editor setMap = getActivity().getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
                     setMap.putString("type", "terrain").apply();
                     mymap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                     fab.collapse();
                 }
         );
         hybrid.setOnClickListener(view -> {
-            SharedPreferences.Editor setMap = Objects.requireNonNull(getActivity()).getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
+            SharedPreferences.Editor setMap = getActivity().getSharedPreferences(MAP_TYPE, Context.MODE_PRIVATE).edit();
             setMap.putString("type", "hybrid").apply();
             mymap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             fab.collapse();
@@ -190,7 +205,7 @@ public class MapsFragment extends Fragment {
     @SuppressLint("MissingPermission")
     public void fetch_the_location() {
         Log.e("result", "fetch the location initiated");
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getActivity()));
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         //initialising the location manager
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         //checking condition for what type of location service is provided or not
@@ -241,7 +256,7 @@ public class MapsFragment extends Fragment {
     public void check_permission() {
         Log.d("result", "running check permission");
         //checking permission if the location permissin is granted
-        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //permission granted
             fetch_the_location();
@@ -260,7 +275,7 @@ public class MapsFragment extends Fragment {
         Log.e("result", "open_settings_and_turn_on_location");
         //this is when the location service is not enabled
         LocationSettingsRequest mLocationSettingsRequest;
-        SettingsClient mSettingsClient = new SettingsClient(Objects.requireNonNull(getContext()));
+        SettingsClient mSettingsClient = new SettingsClient(getContext());
 
         LocationSettingsRequest.Builder request_location = new LocationSettingsRequest.Builder();
         request_location.addLocationRequest(new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY));
@@ -304,7 +319,7 @@ public class MapsFragment extends Fragment {
                         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK), 100);
             }
         } else if (requestCode == 100) {
-            LocationManager locationManager = (LocationManager) Objects.requireNonNull(getActivity()).getSystemService(Context.LOCATION_SERVICE);
+            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
             if (!isGpsEnabled) {
@@ -381,17 +396,6 @@ public class MapsFragment extends Fragment {
 
         //NOTE: mymap variable is not an arraylist, its a GoogleMap instance
         mymap.clear();
-        /*
-        if (user_longitude != null && user_latitude != null) {
-            LatLng mylocation = new LatLng(user_latitude, user_longitude);
-            mymap.addMarker(new MarkerOptions()
-                    .position(mylocation)
-                    .title("My location")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
-            mymap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 12));
-        }
-
-         */
     }
 }
 /*

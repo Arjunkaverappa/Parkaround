@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 
 public class frag_profile extends Fragment {
     CardView settings_vard, land_card;
@@ -22,13 +23,16 @@ public class frag_profile extends Fragment {
         land_card = v.findViewById(R.id.land_card);
 
         settings_vard.setOnClickListener(v1 -> {
-            //something
-            Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+            //navigation to settings activity
+            Intent in = new Intent(getActivity(), settings.class);
+            startActivity(in);
+            Animatoo.animateZoom(getContext());
         });
 
         land_card.setOnClickListener(v12 -> {
             //opening host land
             startActivity(new Intent(getActivity(), host_land.class));
+            Animatoo.animateZoom(getContext());
         });
 
         return v;

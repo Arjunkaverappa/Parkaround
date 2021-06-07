@@ -41,4 +41,14 @@
     <string name="services">Services</string>
     <string name="new_booking">New booking</string>
     <string name="go_to_booking">Confirm booking</string>
+    <string name="fuel_service">Get the realtime updates of fuel prices, compare prices based on cities</string>
+    <string name="traffic_service">Get all the latest traffic rules and regulations at your fingertips</string>
+    <string name="rem_service">Set up remainders for paying bills, renewing insurance and many more</string>
+    <string name="emission_service">Check and navigate to nearby emission testing centers in your city</string>
+    <string name="set_default_map_style">Set default map style</string>
+    <string name="maps">Maps</string>
+    <string name="land_owner">Land owner</string>
+    <string name="edit_address">Edit address</string>
+    <string name="delete_address">Delete address</string>
+    <string name="enter_your_email_id">Enter your email id</string>
 </resources>

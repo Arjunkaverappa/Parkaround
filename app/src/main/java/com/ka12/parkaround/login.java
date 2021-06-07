@@ -67,7 +67,7 @@ public class login extends AppCompatActivity {
     CardView login_card, signup_card, get_otp_card, otp_card;
     Button submit_number, check_otp;
     PinView otp_number;
-    TextInputEditText number, user_name;
+    public static final String EMAIL = "com.ka12.parkaround.this_is_where_email_id_of_a_user_is_saved";
     Boolean is_connected = true;
     //the following are for firebase realtime database
     DatabaseReference reference;
@@ -75,6 +75,7 @@ public class login extends AppCompatActivity {
     //sharedpreference
     public static final String LOGIN = "com.ka12.parkaround.this_is_where_login_details_are_saved";
     public static final String PHONE_NUMBER = "com.ka12.parkaround.this_is_where_phone_number_of_a_user_is_saved";
+    TextInputEditText number, user_email, user_name;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -91,6 +92,7 @@ public class login extends AppCompatActivity {
         check_otp = findViewById(R.id.check_otp);
         number = findViewById(R.id.number);
         user_name = findViewById(R.id.user_name);
+        user_email = findViewById(R.id.user_email);
 
         //setting up action bar and status bar, hiding the otp cards
         set_up_action_and_status_bar();
@@ -122,18 +124,28 @@ public class login extends AppCompatActivity {
         //onclick listenres for the login process
         submit_number.setOnClickListener(v -> {
             Log.d(TAG, "onCreate: clicked submit_number button");
-            if (Objects.requireNonNull(number.getText()).toString().equals("") || number.getText().toString().length() < 9) {
+            if (Objects.requireNonNull(number.getText()).toString().equals("")
+                    || user_email.getText().toString().equals("")
+                    || number.getText().toString().length() < 9) {
                 Toast.makeText(login.this, "Please check the number", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onCreate: Error by the user");
+                Log.d(TAG, "onCreate: Input error by the user");
+            } else if (!user_email.getText().toString().trim().endsWith("@gmail.com")
+                    || !user_email.getText().toString().trim().endsWith("@yahoo.com")
+                    || !user_email.getText().toString().trim().endsWith("@hotmail.com")) {
+                Toast.makeText(this, "Please check your email id", Toast.LENGTH_SHORT).show();
             } else {
                 AlertDialog.Builder b = new AlertDialog.Builder(this);
                 b.setTitle("Disclaimer");
-                b.setMessage("We know that your not a robot, but still lets get it verified.");
+                b.setMessage("Please confrim your not a robot.");
                 b.setPositiveButton("Ok", (dialog, which) -> {
                     get_otp_card.setVisibility(View.GONE);
                     otp_card.setVisibility(View.VISIBLE);
+
+                    //save the email in shared preferences
+                    SharedPreferences.Editor save_it = getSharedPreferences(EMAIL, MODE_PRIVATE).edit();
+                    save_it.putString("email_id", user_email.getText().toString().trim()).apply();
+
                     //calling the otp varification function
-                    //notify users about the not a robot thing
                     verify_phone_number_step_one(number.getText().toString().trim());
                 });
                 b.setCancelable(false);
@@ -243,8 +255,7 @@ public class login extends AppCompatActivity {
         });
     }
 
-    private void resendVerificationCode(String phoneNumber,
-                                        PhoneAuthProvider.ForceResendingToken token) {
+    private void resendVerificationCode(String phoneNumber, PhoneAuthProvider.ForceResendingToken token) {
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
                         .setPhoneNumber(phoneNumber)

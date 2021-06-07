@@ -7,26 +7,37 @@
     android:layout_height="match_parent"
     tools:context=".frag_profile">
 
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/app_name"
+        android:src="@mipmap/a_logo_one" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_below="@+id/logo"
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/settings_card"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="75dp"
             android:layout_margin="10dp"
             android:clickable="true"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="25dp"
             app:cardElevation="20dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#37F8E5"
+                android:background="#3ACEE1"
+                android:textColor="@color/white"
                 android:gravity="center"
                 android:text="@string/settings"
                 android:textSize="27sp"
@@ -37,18 +48,19 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/land_card"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="75dp"
             android:layout_margin="10dp"
             android:clickable="true"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="25dp"
             app:cardElevation="20dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#37F8E5"
+                android:background="#3ACEE1"
                 android:gravity="center"
                 android:text="@string/host_land"
+                android:textColor="@color/white"
                 android:textSize="27sp"
                 android:textStyle="bold" />
 
