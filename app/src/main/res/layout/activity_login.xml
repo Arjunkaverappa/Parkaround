@@ -82,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:hint="@string/enter_your_email_id"
-                        android:inputType="text"
+                        android:inputType="textEmailAddress"
                         android:maxLength="50"
                         android:textColorHint="#8E8D8D"
                         android:textSize="18sp" />

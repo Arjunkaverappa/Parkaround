@@ -40,6 +40,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
       https://github.com/firebase/snippets-android/blob/3f7aaf35b187b20cacc2de1df9cf17064389193a/auth/app/src/main/java/com/google/firebase/quickstart/auth/PhoneAuthActivity.java#L104-L111
@@ -124,15 +126,13 @@ public class login extends AppCompatActivity {
         //onclick listenres for the login process
         submit_number.setOnClickListener(v -> {
             Log.d(TAG, "onCreate: clicked submit_number button");
-            if (Objects.requireNonNull(number.getText()).toString().equals("")
+            if (!emailValidator(user_email.getText().toString().trim())) {
+                Toast.makeText(this, "Please check the email address", Toast.LENGTH_SHORT).show();
+            } else if (Objects.requireNonNull(number.getText()).toString().equals("")
                     || user_email.getText().toString().equals("")
                     || number.getText().toString().length() < 9) {
                 Toast.makeText(login.this, "Please check the number", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onCreate: Input error by the user");
-            } else if (!user_email.getText().toString().trim().endsWith("@gmail.com")
-                    || !user_email.getText().toString().trim().endsWith("@yahoo.com")
-                    || !user_email.getText().toString().trim().endsWith("@hotmail.com")) {
-                Toast.makeText(this, "Please check your email id", Toast.LENGTH_SHORT).show();
             } else {
                 AlertDialog.Builder b = new AlertDialog.Builder(this);
                 b.setTitle("Disclaimer");
@@ -222,6 +222,15 @@ public class login extends AppCompatActivity {
         //call back ends here
     }
 
+    public boolean emailValidator(String email) {
+        Pattern pattern;
+        Matcher matcher;
+        final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        pattern = Pattern.compile(EMAIL_PATTERN);
+        matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
     //the following method is used build an option with firebase to varify
     public void verify_phone_number_step_one(String phoneNumber) {
         Log.d(TAG, "verify_phone_number_step_one: initiated step one");
@@ -297,13 +306,7 @@ public class login extends AppCompatActivity {
             error_dialog(e.getMessage() + " : obtained from get_the_data_into_database");
         });
     }
-     /*
-    public void progress_bar() {
-        //  https://github.com/lopspower/CircularProgressBar
 
-    }
-
-      */
 
     public void set_up_action_and_status_bar() {
         //hiding the action bar

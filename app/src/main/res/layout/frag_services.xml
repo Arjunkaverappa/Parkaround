@@ -1,243 +1,467 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".frag_services">
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/one"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp"
+        android:background="#FFFFFF"
+        android:gravity="center|top"
+        android:paddingTop="5dp"
+        android:text="@string/services"
+        android:textColor="#4E4E4E"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        tools:ignore="RtlSymmetry" />
 
-        <TextView
-            android:id="@+id/one"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="#FFFFFF"
-            android:gravity="center|top"
-            android:paddingStart="15dp"
-            android:paddingTop="10dp"
-            android:text="@string/services"
-            android:textColor="#4E4E4E"
-            android:textSize="33sp"
-            android:textStyle="bold"
-            tools:ignore="RtlSymmetry" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".frag_services">
 
-        <LinearLayout
+        <io.armcha.elasticview.ElasticView
+            android:id="@+id/fuel_card"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="60dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="#8C56EC"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="30dp"
+            app:flexibility="10">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:text="@string/fuel_service"
+                    android:textColor="@color/white"
+                    android:textSize="19sp" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="40dp"
+                    android:backgroundTint="#14F65F"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/check_fuel_prices"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+        </io.armcha.elasticview.ElasticView>
+
+        <io.armcha.elasticview.ElasticView
+            android:id="@+id/traffic_card"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="-40dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="#14F65F"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="30dp"
+            app:flexibility="10">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:text="@string/traffic_service"
+                    android:textColor="@color/white"
+                    android:textSize="19sp" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="40dp"
+                    android:backgroundTint="#EC9756"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/check_traffic_rules"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+        </io.armcha.elasticview.ElasticView>
+
+
+        <io.armcha.elasticview.ElasticView
+            android:id="@+id/remainder_card"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="-40dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="#EC9756"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="30dp"
+            app:flexibility="10">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:text="@string/rem_service"
+                    android:textColor="@color/white"
+                    android:textSize="19sp" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="40dp"
+                    android:backgroundTint="#F64F4B"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/set_remianders"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+        </io.armcha.elasticview.ElasticView>
+
+        <io.armcha.elasticview.ElasticView
+            android:id="@+id/emission_card"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="-40dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="#F64F4B"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="30dp"
+            app:flexibility="10">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:text="@string/emission_service"
+                    android:textColor="@color/white"
+                    android:textSize="19sp" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:backgroundTint="#8C56EC"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/emission_control"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+        </io.armcha.elasticview.ElasticView>
+
+    </LinearLayout>
+
+
+</LinearLayout><!--
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             tools:context=".frag_services">
 
-            <!--this is for fuel prices-->
-            <io.armcha.elasticview.ElasticView
-                android:id="@+id/fuel_card"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="5dp"
-                android:backgroundTint="#8C56EC"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="30dp"
-                app:flexibility="10">
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
+                <TextView
+                    android:id="@+id/one"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="60dp"
+                    android:background="#FFFFFF"
+                    android:gravity="center|top"
+                    android:paddingStart="15dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/services"
+                    android:textColor="#4E4E4E"
+                    android:textSize="33sp"
+                    android:textStyle="bold"
+                    tools:ignore="RtlSymmetry" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:gravity="center"
-                        android:text="@string/fuel_service"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="200dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="40dp"
-                        android:backgroundTint="#14F65F"
-                        app:cardCornerRadius="15dp"
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="200dp"
-                            android:layout_height="50dp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:gravity="center"
-                            android:text="@string/check_fuel_prices"
-                            android:textColor="@color/white"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
-
-                    </androidx.cardview.widget.CardView>
-                </RelativeLayout>
-            </io.armcha.elasticview.ElasticView>
-
-            <!--this is for traffic rules -->
-
-            <io.armcha.elasticview.ElasticView
-                android:id="@+id/traffic_card"
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginTop="-40dp"
-                android:layout_marginBottom="10dp"
-                android:backgroundTint="#14F65F"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="30dp"
-                app:flexibility="10">
-
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="60dp"
+                    tools:context=".frag_services">
 
-                    <TextView
+                    <io.armcha.elasticview.ElasticView
+                        android:id="@+id/fuel_card"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:gravity="center"
-                        android:text="@string/traffic_service"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="200dp"
-                        android:layout_height="50dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="40dp"
-                        android:backgroundTint="#EC9756"
-                        app:cardCornerRadius="15dp"
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="200dp"
-                            android:layout_height="50dp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:gravity="center"
-                            android:text="@string/check_traffic_rules"
-                            android:textColor="@color/white"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
-
-                    </androidx.cardview.widget.CardView>
-                </RelativeLayout>
-            </io.armcha.elasticview.ElasticView>
-
-            <!--this is for remiander alerts -->
-
-            <io.armcha.elasticview.ElasticView
-                android:id="@+id/remainder_card"
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginTop="-40dp"
-                android:layout_marginBottom="10dp"
-                android:backgroundTint="#EC9756"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="30dp"
-                app:flexibility="10">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:gravity="center"
-                        android:text="@string/rem_service"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="200dp"
-                        android:layout_height="50dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="40dp"
-                        android:backgroundTint="#F64F4B"
-                        app:cardCornerRadius="15dp"
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="200dp"
-                            android:layout_height="50dp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:gravity="center"
-                            android:text="@string/set_remianders"
-                            android:textColor="@color/white"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
-
-                    </androidx.cardview.widget.CardView>
-                </RelativeLayout>
-            </io.armcha.elasticview.ElasticView>
-
-            <!--this is for pollution control centers -->
-
-            <io.armcha.elasticview.ElasticView
-                android:id="@+id/emission_card"
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginTop="-40dp"
-                android:layout_marginBottom="60dp"
-                android:backgroundTint="#F64F4B"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="30dp"
-                app:flexibility="10">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:gravity="center"
-                        android:text="@string/emission_service"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="200dp"
-                        android:layout_height="50dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="10dp"
+                        android:layout_height="180dp"
                         android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"
                         android:backgroundTint="#8C56EC"
-                        app:cardCornerRadius="15dp"
-                        app:cardElevation="10dp">
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="30dp"
+                        app:flexibility="10">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="20dp"
+                                android:gravity="center"
+                                android:text="@string/fuel_service"
+                                android:textColor="@color/white"
+                                android:textSize="20sp" />
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="200dp"
+                                android:layout_height="50dp"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginEnd="10dp"
+                                android:layout_marginBottom="40dp"
+                                android:backgroundTint="#14F65F"
+                                app:cardCornerRadius="15dp"
+                                app:cardElevation="10dp">
+
+                                <TextView
+                                    android:layout_width="200dp"
+                                    android:layout_height="50dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:gravity="center"
+                                    android:text="@string/check_fuel_prices"
+                                    android:textColor="@color/white"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold" />
+
+                            </androidx.cardview.widget.CardView>
+                        </RelativeLayout>
+                    </io.armcha.elasticview.ElasticView>
+
+                    <io.armcha.elasticview.ElasticView
+                        android:id="@+id/traffic_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:layout_marginTop="-40dp"
+                        android:layout_marginBottom="10dp"
+                        android:backgroundTint="#14F65F"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="30dp"
+                        app:flexibility="10">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="20dp"
+                                android:gravity="center"
+                                android:text="@string/traffic_service"
+                                android:textColor="@color/white"
+                                android:textSize="20sp" />
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="200dp"
+                                android:layout_height="50dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginEnd="10dp"
+                                android:layout_marginBottom="40dp"
+                                android:backgroundTint="#EC9756"
+                                app:cardCornerRadius="15dp"
+                                app:cardElevation="10dp">
+
+                                <TextView
+                                    android:layout_width="200dp"
+                                    android:layout_height="50dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:gravity="center"
+                                    android:text="@string/check_traffic_rules"
+                                    android:textColor="@color/white"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold" />
+
+                            </androidx.cardview.widget.CardView>
+                        </RelativeLayout>
+                    </io.armcha.elasticview.ElasticView>
+
+
+                    <io.armcha.elasticview.ElasticView
+                        android:id="@+id/remainder_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:layout_marginTop="-40dp"
+                        android:layout_marginBottom="10dp"
+                        android:backgroundTint="#EC9756"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="30dp"
+                        app:flexibility="10">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="20dp"
+                                android:gravity="center"
+                                android:text="@string/rem_service"
+                                android:textColor="@color/white"
+                                android:textSize="20sp" />
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="200dp"
+                                android:layout_height="50dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginEnd="10dp"
+                                android:layout_marginBottom="40dp"
+                                android:backgroundTint="#F64F4B"
+                                app:cardCornerRadius="15dp"
+                                app:cardElevation="10dp">
+
+                                <TextView
+                                    android:layout_width="200dp"
+                                    android:layout_height="50dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:gravity="center"
+                                    android:text="@string/set_remianders"
+                                    android:textColor="@color/white"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold" />
+
+                            </androidx.cardview.widget.CardView>
+                        </RelativeLayout>
+                    </io.armcha.elasticview.ElasticView>
+
+                   -->
+    <!--
+                <io.armcha.elasticview.ElasticView
+                    android:id="@+id/emission_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="-40dp"
+                    android:layout_marginBottom="60dp"
+                    android:backgroundTint="#F64F4B"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="30dp"
+                    app:flexibility="10">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
                         <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="20dp"
+                            android:gravity="center"
+                            android:text="@string/emission_service"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
+
+                        <androidx.cardview.widget.CardView
                             android:layout_width="200dp"
                             android:layout_height="50dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_alignParentBottom="true"
                             android:layout_marginEnd="10dp"
                             android:layout_marginBottom="10dp"
-                            android:gravity="center"
-                            android:text="@string/emission_control"
-                            android:textColor="@color/white"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
+                            android:backgroundTint="#8C56EC"
+                            app:cardCornerRadius="15dp"
+                            app:cardElevation="10dp">
 
-                    </androidx.cardview.widget.CardView>
-                </RelativeLayout>
-            </io.armcha.elasticview.ElasticView>
+                            <TextView
+                                android:layout_width="200dp"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="10dp"
+                                android:layout_marginBottom="10dp"
+                                android:gravity="center"
+                                android:text="@string/emission_control"
+                                android:textColor="@color/white"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
 
-        </LinearLayout>
-    </RelativeLayout>
-</ScrollView>
+                        </androidx.cardview.widget.CardView>
+                    </RelativeLayout>
+                </io.armcha.elasticview.ElasticView>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+    -->

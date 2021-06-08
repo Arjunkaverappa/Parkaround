@@ -2,10 +2,13 @@ package com.ka12.parkaround;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -23,7 +26,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 
-import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -58,6 +60,9 @@ public class booking extends AppCompatActivity implements RangeTimePickerDialog.
     DatabaseReference reference;
     String user_phone_number, user_address, user_time_start, user_time_end, user_vehicle_details, user_email_id;
     Boolean was_time_range_selected = false;
+    //refers to the owner of the land
+    String owner_phone_number;
+    Double from_latitude, to_longitude;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -174,10 +179,11 @@ public class booking extends AppCompatActivity implements RangeTimePickerDialog.
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         reference = firebaseDatabase.getReference().child("BOOKINGS");
-        reference.child(user_phone_number).setValue(input_text).addOnCompleteListener(task -> {
+        reference.child(owner_phone_number).setValue(input_text).addOnCompleteListener(task -> {
             //update the is_active_status in firebase for revelent field
             //this is to change the active status of the location booked, firstly get the address
             Log.e("pays", "confirm booking success");
+            //owner address
             get_the_address();
         }).addOnFailureListener(e -> {
             //on failure listener
@@ -187,17 +193,16 @@ public class booking extends AppCompatActivity implements RangeTimePickerDialog.
     }
 
     public void change_the_values_in_database(String user_address_from_firebase) {
-        //setting active status to busy
+        //setting active status to busy in owner adress
         Log.e("pays", "change the values in data_base initiated");
         if (user_address_from_firebase != null) {
             String[] split = user_address_from_firebase.split("\\#");
             firebaseDatabase = FirebaseDatabase.getInstance();
-            reference = firebaseDatabase.getReference().child("LOCATIONS").child(user_phone_number);
+            reference = firebaseDatabase.getReference().child("LOCATIONS").child(owner_phone_number);
             reference.setValue(split[0] + "#" + split[1] + "#" + split[2] + "#" + "busy" + "#" + split[4])
                     .addOnCompleteListener(task -> {
-                        startActivity(new Intent(booking.this, MainActivity.class));
-                        Animatoo.animateZoom(booking.this);
-                        finish();
+                        //every step has been cpmpleted in the booking process
+                        guide_the_user_to_location();
                     });
 
         } else {
@@ -205,21 +210,30 @@ public class booking extends AppCompatActivity implements RangeTimePickerDialog.
         }
     }
 
-
     @SuppressLint("SetTextI18n")
     public void set_up_text_views(String data) {
+        Log.e("texts", data);
         // 0->latitue
         // 1->longitude
         // 2->final_address
         // 3->is_active
         // 4->pricing
+        // 5->owner_key
+
         String[] split = data.split("\\#");
+
+        //setting up from and to
+        from_latitude = Double.parseDouble(split[0]);
+        to_longitude = Double.parseDouble(split[1]);
+
         address.setText(split[2]);
         pricing.setText("₹" + split[4] + "/hour");
         location_price = Integer.parseInt(split[4]);
 
         //save the data to upload onto firebase if the user decides to book the location
         user_address = split[2];
+
+        owner_phone_number = split[5];
     }
 
     @Override
@@ -258,14 +272,16 @@ public class booking extends AppCompatActivity implements RangeTimePickerDialog.
     }
 
     public void get_the_address() {
-        Log.e("pays", "initiated get the address with " + user_phone_number);
+        Log.e("pays", "initiated get the address with ");
+        //getting the address of the land owner who the end user booked
+
         firebaseDatabase = FirebaseDatabase.getInstance();
         reference = firebaseDatabase.getReference().child("LOCATIONS");//.child(user_phone_number.trim());
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String data_from_firebase = snapshot.getValue(String.class);
-                if (Objects.equals(snapshot.getKey(), user_phone_number)) {
+                if (Objects.equals(snapshot.getKey(), owner_phone_number)) {
                     Log.e("pays", "data from firebase :" + data_from_firebase);
                     //copy the data into another string
                     change_the_values_in_database(data_from_firebase);
@@ -342,7 +358,6 @@ public class booking extends AppCompatActivity implements RangeTimePickerDialog.
         }
     }
 
-
     @Override
     public void onPaymentSuccess(String s) {
         //s is the payment is of the successfull result, save it in firebase
@@ -356,5 +371,31 @@ public class booking extends AppCompatActivity implements RangeTimePickerDialog.
     public void onPaymentError(int i, String s) {
         Toast.makeText(this, "Payment failed", Toast.LENGTH_SHORT).show();
         Log.e("razer", "ERROR :" + s);
+    }
+
+    public void guide_the_user_to_location() {
+        /*
+        startActivity(new Intent(booking.this, MainActivity.class));
+        Animatoo.animateZoom(booking.this);
+        finish();
+         */
+        Context context;
+        AlertDialog.Builder a = new Builder(this);
+        a.setTitle("Disclaimer");
+        a.setMessage("Due to API restrictions, we are not allowed to navigate the user to the parking location, hence Google maps will open " +
+                "in the next window to navigate to the location. Please return to the app once you reach the location");
+        a.setPositiveButton("Ok", (dialog, which) -> {
+            //opening the google maps activity
+            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + from_latitude + "," + to_longitude + "&avoid=tf");
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(mapIntent);
+            } else {
+                Toast.makeText(this, "Please install Google maps from playstore", Toast.LENGTH_SHORT).show();
+            }
+        });
+        a.setCancelable(false);
+        a.show();
     }
 }

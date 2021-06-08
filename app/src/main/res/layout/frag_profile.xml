@@ -59,7 +59,7 @@
                 android:layout_height="match_parent"
                 android:background="#3ACEE1"
                 android:gravity="center"
-                android:text="@string/host_land"
+                android:text="@string/rent_parking_spot"
                 android:textColor="@color/white"
                 android:textSize="27sp"
                 android:textStyle="bold" />

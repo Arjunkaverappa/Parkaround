@@ -26,7 +26,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 
-import com.gauravk.bubblenavigation.BubbleNavigationConstraintView;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,10 +34,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
+import me.ibrahimsn.lib.SmoothBottomBar;
+
 
 public class MainActivity extends AppCompatActivity {
     LinearLayout frag;
-    BubbleNavigationConstraintView bottombar;
+    SmoothBottomBar bottombar;
     Boolean is_connected = true;
     long back_pressed, TIME_INTERVAL_BACK = 2000;
     public static final String PHONE_NUMBER = "com.ka12.parkaround.this_is_where_phone_number_of_a_user_is_saved";
@@ -46,10 +47,11 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference reference;
     //to check booking
-    String user_phone_number, user_address;
+    String user_phone_number, requested_user_number, user_address;
     //the following are in the booking custom view
     TextView cancel_btn, vehicle_name, vehicle_number, vehicle_timings, btn_next;
     CardView booking_layout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,11 +78,44 @@ public class MainActivity extends AppCompatActivity {
         check_network();
 
         //setting up bottom navigationbar to the middle element
-        bottombar.setCurrentActiveItem(1);
-
+        bottombar.setItemActiveIndex(1);
+        bottombar.setBarSideMargins(10);
         //getting the maps fragment and setting-it as default
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().add(R.id.frag, new MapsFragment()).commit();
+        bottombar.setOnItemSelectedListener(i -> {
+            switch (i) {
+                case 0:
+                    vibrate_phone();
+                    //getting the activity fragment
+                    FragmentManager activity = getSupportFragmentManager();
+                    activity.beginTransaction().remove(new MapsFragment())
+                            .remove(new frag_land_owner())
+                            .replace(R.id.frag, new frag_services())
+                            .commit();
+                    break;
+                case 1:
+                    vibrate_phone();
+                    //getting the maps fragment
+                    FragmentManager explore = getSupportFragmentManager();
+                    explore.beginTransaction().remove(new frag_services())
+                            .remove(new frag_land_owner())
+                            .replace(R.id.frag, new MapsFragment())
+                            .commit();
+                    break;
+                case 2:
+                    vibrate_phone();
+                    //getting the settings fragment
+                    FragmentManager settings = getSupportFragmentManager();
+                    settings.beginTransaction().remove(new MapsFragment())
+                            .remove(new frag_land_owner())
+                            .replace(R.id.frag, new frag_profile())
+                            .commit();
+                    break;
+            }
+            return true;
+        });
+        /*
         bottombar.setNavigationChangeListener((view, position) -> {
             switch (position) {
                 case 0:
@@ -112,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         });
+
+         */
         //checking for new booking
         check_for_bookings();
     }
@@ -189,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
             4) user address
             5) time start
             6) time end
+            7) booking guy phone number
          */
         //checking if any booking has arrived
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -196,19 +234,6 @@ public class MainActivity extends AppCompatActivity {
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                /*
-                // String key=snapshot.getKey();
-                String data = snapshot.getValue(String.class);
-                if (data != null) {
-                    String[] split = data.split("\\#");
-                    //comparing address
-                    if (user_address.equals(split[4])) {
-                        Log.d("tempo", data);
-                        show_booking_arrived(data);
-                    }
-                }
-                 */
-
                 String key = snapshot.getKey();
                 Log.e("temp", key + " and user phone : " + user_phone_number);
                 if (user_phone_number.equals(key)) {
@@ -223,22 +248,22 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                check_for_bookings();
+
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                check_for_bookings();
+
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                check_for_bookings();
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                check_for_bookings();
+
             }
         });
     }
@@ -255,12 +280,17 @@ public class MainActivity extends AppCompatActivity {
             6) time end
             7) booking_guy_phone_number(key)
          */
+
+
         Log.d("tempo", "running");
         booking_layout.setVisibility(View.VISIBLE);
         String[] split = data.split("\\#");
         vehicle_name.setText("Vehicle  :" + split[2] + " " + split[1] + " (" + split[3] + ")");
         vehicle_number.setText("Number :" + split[0]);
         vehicle_timings.setText("Timings :From " + split[5] + " To " + split[6]);
+
+        //save the requested_user_number to
+        requested_user_number = split[7];
 
         //booking cancel
         cancel_btn.setOnClickListener(v -> {
@@ -279,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
         //booking confirm
         btn_next.setOnClickListener(v -> {
             //go next
-            Toast.makeText(MainActivity.this, "submit", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "coming soon!", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -288,10 +318,67 @@ public class MainActivity extends AppCompatActivity {
         reference = firebaseDatabase.getReference().child("BOOKINGS").child(phone_number);
         reference.removeValue().addOnCompleteListener(task -> {
             //node deleted
-            Toast.makeText(MainActivity.this, "Booking canceled", Toast.LENGTH_SHORT).show();
+            get_the_address();
         }).addOnFailureListener(e -> {
             //error handler
             Toast.makeText(MainActivity.this, "ERROR : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    public void reflect_in_database(String user_address_from_firebase) {
+        //setting active status to busy in owner adress
+        Log.e("paym", "reflect the values in data_base initiated");
+        if (user_address_from_firebase != null) {
+            String[] split = user_address_from_firebase.split("\\#");
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            reference = firebaseDatabase.getReference().child("LOCATIONS").child(requested_user_number);
+            reference.setValue(split[0] + "#" + split[1] + "#" + split[2] + "#yes#" + split[4])
+                    .addOnCompleteListener(task -> {
+                        //do something
+                        Log.e("paym", "success");
+                        Toast.makeText(MainActivity.this, "Booking canceled", Toast.LENGTH_SHORT).show();
+                    });
+
+        } else {
+            Toast.makeText(this, "NullPointerException from firebase...", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void get_the_address() {
+        Log.e("paym", "initiated get the address with ");
+        //getting the address of the land owner who the end user booked
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        reference = firebaseDatabase.getReference().child("LOCATIONS");
+        reference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String data_from_firebase = snapshot.getValue(String.class);
+                if (Objects.equals(snapshot.getKey(), requested_user_number)) {
+                    Log.e("paym", "data from firebase :" + data_from_firebase);
+                    //copy the data into another string
+                    reflect_in_database(data_from_firebase);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
     }
 
@@ -304,16 +391,5 @@ public class MainActivity extends AppCompatActivity {
             back_pressed = System.currentTimeMillis();
         }
     }
-    /*
-    //currently not used
-    public void check_permission() {
-        //checking permission if the location is granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //permission not granted, asking for permission
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
-        }
-    }
 
-     */
 }

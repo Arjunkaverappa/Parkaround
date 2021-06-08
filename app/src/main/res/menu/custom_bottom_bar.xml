@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/services"
+        android:icon="@drawable/ic_services"
+        android:title="@string/services"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/another_item_2"
+        android:icon="@drawable/explore_icon"
+        android:title="@string/explore"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/another_item_3"
+        android:icon="@drawable/ic_profile_24"
+        android:title="@string/profile"
+        app:showAsAction="always" />
+</menu>

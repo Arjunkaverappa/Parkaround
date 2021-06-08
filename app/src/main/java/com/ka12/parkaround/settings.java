@@ -40,10 +40,8 @@ public class settings extends AppCompatActivity {
 
         });
 
-
         //hiding the action bar
         set_up_action_and_status_bar();
-
 
     }
 

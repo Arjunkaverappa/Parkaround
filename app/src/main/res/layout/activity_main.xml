@@ -29,6 +29,7 @@
             android:layout_height="wrap_content" />
     </androidx.cardview.widget.CardView>
 
+    <!--
     <com.gauravk.bubblenavigation.BubbleNavigationConstraintView
         android:id="@+id/bottombar"
         android:layout_width="match_parent"
@@ -67,5 +68,23 @@
             app:bt_title="Profile" />
 
     </com.gauravk.bubblenavigation.BubbleNavigationConstraintView>
+    -->
+    <me.ibrahimsn.lib.SmoothBottomBar
+        android:id="@+id/bottombar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        app:backgroundColor="#B853F8"
+        app:cornerRadius="0dp"
+        app:duration="600"
+        app:iconSize="25dp"
+        app:iconTint="@color/white"
+        app:iconTintActive="#ffffff"
+        app:indicatorColor="#C97AFB"
+        app:indicatorRadius="13dp"
+        app:itemPadding="10dp"
+        app:menu="@menu/custom_bottom_bar"
+        app:textColor="@color/white"
+        app:textSize="15sp" />
 
 </RelativeLayout>

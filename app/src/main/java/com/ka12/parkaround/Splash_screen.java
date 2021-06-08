@@ -16,7 +16,6 @@ import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 public class Splash_screen extends AppCompatActivity {
     public static final String LOGIN = "com.ka12.parkaround.this_is_where_login_details_are_saved";
     Boolean is_logged_in;
-    //ImageView logo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

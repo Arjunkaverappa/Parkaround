@@ -38,7 +38,7 @@
     <string name="pricing_info">max  ₹99/hour \nmin  ₹10/hour</string>
     <string name="price">Price/Hour</string>
     <string name="set_timings">Select Timings</string>
-    <string name="services">Services</string>
+    <string name="services_new">Services</string>
     <string name="new_booking">New booking</string>
     <string name="go_to_booking">Confirm booking</string>
     <string name="fuel_service">Get the realtime updates of fuel prices, compare prices based on cities</string>
@@ -51,4 +51,8 @@
     <string name="edit_address">Edit address</string>
     <string name="delete_address">Delete address</string>
     <string name="enter_your_email_id">Enter your email id</string>
+    <string name="services">Services</string>
+    <string name="explore">Explore</string>
+    <string name="profile">Profile</string>
+    <string name="rent_parking_spot">Rent parking spot</string>
 </resources>

@@ -340,6 +340,7 @@ public class MapsFragment extends Fragment {
         // 2->final_address
         // 3->is_active
         // 4->user_price
+        // 5->user_key
         firebaseDatabase = FirebaseDatabase.getInstance();
         reference = firebaseDatabase.getReference().child("LOCATIONS");
         reference.addChildEventListener(new ChildEventListener() {
@@ -350,7 +351,7 @@ public class MapsFragment extends Fragment {
                 //spliting the data from database
                 if (data != null) {
                     String[] spliting = data.split("\\#");
-                    availabe_locations.add(data);
+                    availabe_locations.add(data + "#" + snapshot.getKey());
                     //setting up the latitude and longitude after splitting
                     set_the_marker(Double.parseDouble(spliting[0]), Double.parseDouble(spliting[1]), spliting[2]);
                 }
