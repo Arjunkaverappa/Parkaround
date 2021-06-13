@@ -62,7 +62,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.active_status.setText("Currently Inactive");
             holder.active_status.setTextColor(Color.RED);
         }
-        holder.pricing.setText("₹" + split[4]);
+        holder.pricing.setText("₹" + split[4] + "/hour");
 
         holder.location_card.setOnClickListener(v ->
         {

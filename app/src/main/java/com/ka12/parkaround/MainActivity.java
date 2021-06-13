@@ -3,6 +3,7 @@ package com.ka12.parkaround;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -26,6 +27,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     long back_pressed, TIME_INTERVAL_BACK = 2000;
     public static final String PHONE_NUMBER = "com.ka12.parkaround.this_is_where_phone_number_of_a_user_is_saved";
     public static final String LAND_ADDRESS = "com.ka12.parkaround.this_is_where_address_of_the_land_is_saved";
+    public static final String IS_PARKING = "com.ka12.parkaround.this_is_where_the_parking_status_is_saved";
     FirebaseDatabase firebaseDatabase;
     DatabaseReference reference;
     //to check booking
@@ -71,15 +74,18 @@ public class MainActivity extends AppCompatActivity {
 
         set_up_action_and_status_bar();
 
-        //checking if the location services are enabled or not (currently disabled)
-        //check_permission();
+        //checking if the user has reached the parking spot
+        SharedPreferences getparking = getSharedPreferences(IS_PARKING, MODE_PRIVATE);
+        if (getparking.getBoolean("is_parking", false)) {
+            go_to_parking_activity();
+        }
 
         //checking if the internet service is enabled or not
         check_network();
 
         //setting up bottom navigationbar to the middle element
         bottombar.setItemActiveIndex(1);
-        bottombar.setBarSideMargins(10);
+        bottombar.setBarSideMargins(35);
         //getting the maps fragment and setting-it as default
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction().add(R.id.frag, new MapsFragment()).commit();
@@ -115,47 +121,14 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
-        /*
-        bottombar.setNavigationChangeListener((view, position) -> {
-            switch (position) {
-                case 0:
-                    vibrate_phone();
-                    //getting the activity fragment
-                    FragmentManager activity = getSupportFragmentManager();
-                    activity.beginTransaction().remove(new MapsFragment())
-                            .remove(new frag_land_owner())
-                            .replace(R.id.frag, new frag_services())
-                            .commit();
-                    break;
-                case 1:
-                    vibrate_phone();
-                    //getting the maps fragment
-                    FragmentManager explore = getSupportFragmentManager();
-                    explore.beginTransaction().remove(new frag_services())
-                            .remove(new frag_land_owner())
-                            .replace(R.id.frag, new MapsFragment())
-                            .commit();
-                    break;
-                case 2:
-                    vibrate_phone();
-                    //getting the settings fragment
-                    FragmentManager settings = getSupportFragmentManager();
-                    settings.beginTransaction().remove(new MapsFragment())
-                            .remove(new frag_land_owner())
-                            .replace(R.id.frag, new frag_profile())
-                            .commit();
-                    break;
-            }
-        });
 
-         */
         //checking for new booking
         check_for_bookings();
     }
 
     public void vibrate_phone() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(30);
+        v.vibrate(24);
     }
 
     public void set_up_action_and_status_bar() {
@@ -280,9 +253,6 @@ public class MainActivity extends AppCompatActivity {
             6) time end
             7) booking_guy_phone_number(key)
          */
-
-
-        Log.d("tempo", "running");
         booking_layout.setVisibility(View.VISIBLE);
         String[] split = data.split("\\#");
         vehicle_name.setText("Vehicle  :" + split[2] + " " + split[1] + " (" + split[3] + ")");
@@ -346,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void get_the_address() {
         Log.e("paym", "initiated get the address with ");
-        //getting the address of the land owner who the end user booked
+        //getting the address of the land owner who the current user booked
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         reference = firebaseDatabase.getReference().child("LOCATIONS");
@@ -392,4 +362,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void go_to_parking_activity() {
+        // bottombar.setVisibility(View.GONE);
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle("Disclaimer");
+        b.setMessage("Have you reached the location yet..? \nIf not please come back after reaching the location");
+        b.setPositiveButton("Yes", (dialog, which) -> {
+            //navigating to parking activity
+            startActivity(new Intent(MainActivity.this, Parking_activity.class));
+            Animatoo.animateZoom(MainActivity.this);
+            //finish();
+        });
+        b.setNegativeButton("No", (dialog, which) -> {
+            //logic
+            Toast.makeText(MainActivity.this, "Please get to the parking location", Toast.LENGTH_SHORT).show();
+        });
+        b.setCancelable(true);
+        b.show();
+    }
+
+    /*
+    //to inflate a custom layout
+    LinearLayout item = findViewById(R.id.frag);
+        View v = getLayoutInflater().inflate(R.layout.custom_booking, null);
+        item.addView(v);
+     */
 }

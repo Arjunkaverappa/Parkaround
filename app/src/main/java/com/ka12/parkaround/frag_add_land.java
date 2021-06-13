@@ -108,10 +108,11 @@ public class frag_add_land extends Fragment {
         {
             //the details will be taken here
             if (!Objects.requireNonNull(road_colony_area.getText()).toString().equals("")
-                    || !Objects.requireNonNull(house_or_building.getText()).toString().equals("")
-                    || Objects.requireNonNull(near_to.getText()).toString().equals("")
-                    || !Objects.requireNonNull(pincode.getText()).toString().equals("")
-                    || Objects.requireNonNull(price.getText()).toString().equals("")) {
+                    && !Objects.requireNonNull(house_or_building.getText()).toString().equals("")
+                    && !Objects.requireNonNull(near_to.getText()).toString().equals("")
+                    && !Objects.requireNonNull(pincode.getText()).toString().equals("")
+                    && !city.equals("City")
+                    && !Objects.requireNonNull(price.getText()).toString().equals("")) {
                 address_near_to = Objects.requireNonNull(near_to.getText()).toString().trim();
                 user_house_or_build = Objects.requireNonNull(house_or_building.getText()).toString().trim();
                 user_road_or_col = road_colony_area.getText().toString().trim();
@@ -134,7 +135,7 @@ public class frag_add_land extends Fragment {
 
     public void check_permission() {
         //checking permission if the location permissin is granted
-        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getActivity()), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //permission granted
             Log.e("fetch", "permission is granted");
@@ -152,7 +153,7 @@ public class frag_add_land extends Fragment {
     @SuppressLint("MissingPermission")
     public void fetch_the_location() {
         Log.e("fetch", "fetch the location initiated");
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getActivity()));
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         //initialising the location manager
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         //checking condition for what type of location service is provided or not
@@ -219,7 +220,7 @@ public class frag_add_land extends Fragment {
         reference = firebaseDatabase.getReference().child("LOCATIONS");
 
         //retrieving the phone number of the user from shared preferences
-        SharedPreferences get_number = Objects.requireNonNull(getActivity()).getSharedPreferences(PHONE_NUMBER, Context.MODE_PRIVATE);
+        SharedPreferences get_number = getActivity().getSharedPreferences(PHONE_NUMBER, Context.MODE_PRIVATE);
         user_phone_number = get_number.getString("phone", "9977997795");
 
         String final_loc = user_latitude + "#" + user_longitude + "#" + final_address + "#yes#" + user_price;

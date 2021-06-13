@@ -36,7 +36,7 @@ public class Splash_screen extends AppCompatActivity {
 
         //getting the login details (default false)
         SharedPreferences getlogin = getSharedPreferences(LOGIN, MODE_PRIVATE);
-        is_logged_in = getlogin.getBoolean("is_login", false);
+        is_logged_in = getlogin.getBoolean("is_login", true);
 
         // YoYo.with(Techniques.ZoomIn).duration(1100).repeat(0);
 

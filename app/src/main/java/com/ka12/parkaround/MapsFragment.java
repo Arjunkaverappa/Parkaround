@@ -100,23 +100,6 @@ public class MapsFragment extends Fragment {
                 default:
                     mymap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             }
-           /*
-           //this opens the booking activity when the marker is clicked
-            mymap.setOnMarkerClickListener(marker -> {
-                String which_marker = marker.getTitle();
-                for (int i = 0; i < availabe_locations.size(); i++) {
-                    String[] split_it = availabe_locations.get(i).split("\\#");
-                    if (which_marker != null && which_marker.equals(split_it[2])) {
-                        //setting up onlick listeners
-                        Intent go_to_booking = new Intent(getActivity(), booking.class);
-                        go_to_booking.putExtra("details", availabe_locations.get(i));
-                        startActivity(go_to_booking);
-                        Animatoo.animateZoom(getContext());
-                    }
-                }
-                return true;
-            });
-            */
             mymap.setOnInfoWindowClickListener(marker -> {
                 //funtion
                 String which_marker = marker.getTitle();

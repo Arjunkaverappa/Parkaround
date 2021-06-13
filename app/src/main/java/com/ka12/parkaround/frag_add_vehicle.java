@@ -81,11 +81,11 @@ public class frag_add_vehicle extends Fragment {
         });
 
         add_vehicle.setOnClickListener(v1 -> {
-            if (Objects.requireNonNull(vehicle_number.getText()).toString().trim().equals("")
-                    || Objects.requireNonNull(vehicle_model.getText()).toString().trim().equals("")
-                    || user_manufacturer.equals("")
-                    || user_vehicle_color.equals("")) {
-                Toast.makeText(getActivity(), "Please check the inputs", Toast.LENGTH_SHORT).show();
+            if (vehicle_number.getText().toString().trim().equals("")
+                    || vehicle_model.getText().toString().trim().equals("")
+                    || user_manufacturer.equals("Manufacturer")
+                    || user_vehicle_color.equals("color")) {
+                Toast.makeText(getActivity(), "Please enter all the fields", Toast.LENGTH_SHORT).show();
             } else {
                 add_to_firebase(vehicle_number.getText().toString().trim(), Objects.requireNonNull(vehicle_model.getText()).toString().trim());
             }
@@ -97,7 +97,7 @@ public class frag_add_vehicle extends Fragment {
     public void add_to_firebase(String v_number, String v_model) {
 
         //retrieving the phone number of the user from shared preferences
-        SharedPreferences get_number = Objects.requireNonNull(getActivity()).getSharedPreferences(PHONE_NUMBER, Context.MODE_PRIVATE);
+        SharedPreferences get_number = getActivity().getSharedPreferences(PHONE_NUMBER, Context.MODE_PRIVATE);
         user_phone_number = get_number.getString("phone", "9977997795");
 
         String final_data = v_number + "#" + v_model + "#" + user_manufacturer + "#" + user_vehicle_color;

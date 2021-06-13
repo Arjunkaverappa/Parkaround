@@ -35,7 +35,7 @@
     <string name="enter_vehicle_model">Enter vehicle model</string>
     <string name="book_location">book Location</string>
     <string name="near_to_shop_complex_landmark">Near to shop/complex/landmark</string>
-    <string name="pricing_info">max  ₹99/hour \nmin  ₹10/hour</string>
+    <string name="pricing_info">max   ₹99/hour \nmin   ₹10/hour</string>
     <string name="price">Price/Hour</string>
     <string name="set_timings">Select Timings</string>
     <string name="services_new">Services</string>
@@ -55,4 +55,7 @@
     <string name="explore">Explore</string>
     <string name="profile">Profile</string>
     <string name="rent_parking_spot">Rent parking spot</string>
+    <string name="open_scanner">open scanner</string>
+    <string name="current_booking_will_appear_here">You dont have any booking right now</string>
+    <string name="show_qr_code">Show Qr-code</string>
 </resources>

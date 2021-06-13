@@ -1,57 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/host_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".frag_land_owner">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/host_card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_height="0dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_weight="1.5"
         app:cardCornerRadius="20dp"
         app:cardElevation="20dp">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/qr_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="25dp"
+            android:contentDescription="@string/app_name" />
+
+        <RelativeLayout
+            android:id="@+id/linear_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/address"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="5dp"
                 android:drawablePadding="10dp"
                 android:gravity="start"
                 android:text="@string/fetching_address"
-                android:textSize="21sp"
-                android:textStyle="bold"
+                android:textSize="17sp"
+                android:textStyle="italic"
                 app:drawableStartCompat="@drawable/ic_my_location_24" />
 
             <TextView
                 android:id="@+id/active_status"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/address"
                 android:drawablePadding="10dp"
                 android:gravity="start"
+                android:layout_marginTop="5dp"
                 android:text="@string/fetching_status"
-                android:textSize="21sp"
-                android:textStyle="bold"
+                android:textSize="17sp"
+                android:textStyle="italic"
                 app:drawableStartCompat="@drawable/ic_is_active_24" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_below="@+id/active_status"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="10dp"
                 app:cardCornerRadius="20dp">
 
                 <include
@@ -62,20 +75,114 @@
 
             </androidx.cardview.widget.CardView>
 
-        </LinearLayout>
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
     <!-- https://github.com/MAXDeliveryNG/slideview -->
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="20dp">
+
+        <TextView
+            android:id="@+id/no_booking"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/current_booking_will_appear_here"
+            android:textSize="19sp" />
+
+        <RelativeLayout
+            android:id="@+id/booking_arrived"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/vehicle_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="start"
+                android:paddingStart="10dp"
+                android:text="@string/current_booking_will_appear_here"
+                android:textSize="18sp"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/vehicle_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/vehicle_name"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="start"
+                android:paddingStart="10dp"
+                android:text="@string/current_booking_will_appear_here"
+                android:textSize="18sp"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/vehicle_timings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/vehicle_number"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="start"
+                android:paddingStart="10dp"
+                android:text="@string/current_booking_will_appear_here"
+                android:textSize="18sp"
+                tools:ignore="RtlSymmetry" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/show_qr"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginBottom="10dp"
+                android:clickable="true"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="20dp">
+
+                <TextView
+                    android:id="@+id/tv_qr"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/purple_200"
+                    android:gravity="center"
+                    android:text="@string/show_qr_code"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+            </androidx.cardview.widget.CardView>
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <ng.max.slideview.SlideView
         android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="80dp"
-
+        android:layout_marginBottom="10dp"
         app:sv_animateSlideText="true"
         app:sv_buttonBackgroundColor="@color/white"
         app:sv_buttonImage="@drawable/ic_double_arrow_24"
@@ -86,4 +193,4 @@
         app:sv_slideTextSize="16sp"
         app:sv_strokeColor="@color/white" />
 
-</RelativeLayout>
+</LinearLayout>
