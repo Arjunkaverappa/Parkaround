@@ -65,7 +65,5 @@ dependencies {
     implementation 'io.github.chaosleung:pinview:1.4.4'                        //pinview maven
     implementation 'com.github.ibrahimsn98:SmoothBottomBar:1.7.6'              //bottombar maven
     implementation 'com.github.SumiMakito:AwesomeQRCode:1.2.0'                 //barcode new
-    //implementation 'androidmads.library.qrgenearator:QRGenearator:1.0.4'       //bar code generater
-    //implementation 'com.google.zxing:core:3.3.3'                               //bar code library core
     implementation 'com.budiyev.android:code-scanner:2.1.0'                    //bar code scanner
 }

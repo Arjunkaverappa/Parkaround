@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         //checking if the user has reached the parking spot
         SharedPreferences getparking = getSharedPreferences(IS_PARKING, MODE_PRIVATE);
-        if (getparking.getBoolean("is_parking", false)) {
+        if (getparking.getBoolean("is_parking", true)) {
             go_to_parking_activity();
         }
 
@@ -279,7 +279,8 @@ public class MainActivity extends AppCompatActivity {
         //booking confirm
         btn_next.setOnClickListener(v -> {
             //go next
-            Toast.makeText(MainActivity.this, "coming soon!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this, host_land.class));
+            Animatoo.animateZoom(this);
         });
     }
 

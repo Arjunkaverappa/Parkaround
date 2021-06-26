@@ -58,4 +58,8 @@
     <string name="open_scanner">open scanner</string>
     <string name="current_booking_will_appear_here">You dont have any booking right now</string>
     <string name="show_qr_code">Show Qr-code</string>
+    <string name="sanner_info">Please scan the Qr-code from the parking providers device</string>
+    <string name="total_hours">0\nHours</string>
+    <string name="total_bookings">0\nBookings</string>
+    <string name="total_earned">0\nEarned</string>
 </resources>

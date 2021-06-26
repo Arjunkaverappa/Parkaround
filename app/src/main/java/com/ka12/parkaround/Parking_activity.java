@@ -1,7 +1,9 @@
 package com.ka12.parkaround;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -9,10 +11,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,30 +22,41 @@ import androidx.core.content.ContextCompat;
 
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import org.jetbrains.annotations.NotNull;
 
 public class Parking_activity extends AppCompatActivity {
-    ImageView img;
     Bitmap bitmap;
-    Button btn;
     CodeScannerView scannerView;
+    public static final String PHONE_NUMBER = "com.ka12.parkaround.this_is_where_phone_number_of_a_user_is_saved";
     CodeScanner codeScanner;
+    String user_phone_number;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parking);
-        img = findViewById(R.id.img);
-        btn = findViewById(R.id.btn);
         scannerView = findViewById(R.id.scanner_view);
 
         //setting up action bar
         set_up_action_and_status_bar();
 
-        //hiding the scanner view
-        scannerView.setVisibility(View.GONE);
+        //getting the user phone number
+        SharedPreferences get_number = getSharedPreferences(PHONE_NUMBER, Context.MODE_PRIVATE);
+        user_phone_number = get_number.getString("phone", "9977997795");
 
-        btn.setOnClickListener(v -> check_permission());
+        //open_scanner()
+        check_permission();
+
+        //testing
+        // check_the_scan_result("9977997795");
     }
 
     @Override
@@ -67,18 +79,12 @@ public class Parking_activity extends AppCompatActivity {
 
     public void open_scanner() {
         //setting up  visibility
-        btn.setVisibility(View.GONE);
-        img.setVisibility(View.GONE);
-        scannerView.setVisibility(View.VISIBLE);
 
-        CodeScannerView scannerView = findViewById(R.id.scanner_view);
         codeScanner = new CodeScanner(this, scannerView);
         codeScanner.setDecodeCallback(result -> runOnUiThread(() -> {
             //result
-            scannerView.setVisibility(View.GONE);
-            btn.setText(result.getText());
-            img.setVisibility(View.VISIBLE);
             Toast.makeText(Parking_activity.this, result.getText(), Toast.LENGTH_SHORT).show();
+            check_the_scan_result(result.getText());
         }));
         try {
             codeScanner.startPreview();
@@ -87,6 +93,60 @@ public class Parking_activity extends AppCompatActivity {
             Toast.makeText(this, "ERROR :" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void check_the_scan_result(String result) {
+        //check is its the owner number, get the node from firebase
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        reference = firebaseDatabase.getReference().child("BOOKINGS");
+        reference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+                String data = snapshot.getValue(String.class);
+                if (data != null) {
+                    /* these are the details obtained from the firebase upon booking done
+                        0) vehicle number
+                        1) vehicle model
+                        2) manufacturer
+                        3) color
+                        4) user address
+                        5) time start
+                        6) time end
+                        7) booking guy phone number
+         */
+                    Log.e("books", data);
+                    String[] split = data.split("\\#");
+                    if (split[7].equals(result)) {
+                        confrim_booking();
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void confrim_booking() {
+        Toast.makeText(this, "Booking confirmed", Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     protected void onResume() {
@@ -101,6 +161,7 @@ public class Parking_activity extends AppCompatActivity {
             codeScanner.releaseResources();
         super.onPause();
     }
+
 
     public void set_up_action_and_status_bar() {
         //hiding the action bar

@@ -62,11 +62,12 @@ public class frag_land_owner extends Fragment {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference reference;
     //ui
-    TextView address, active_status;
+    TextView address, active_status, my_number;
     SlideView swipe;
     Boolean is_active;
     String data_from_firebase;
     Boolean is_connected = true, is_map_ready = false;
+
     //google map
     GoogleMap mymap;
     Double user_latitude, user_longitude;
@@ -105,6 +106,7 @@ public class frag_land_owner extends Fragment {
         img = v.findViewById(R.id.qr_img);
         linear_map = v.findViewById(R.id.linear_map);
         tv_qr = v.findViewById(R.id.tv_qr);
+        my_number = v.findViewById(R.id.my_number);
 
         //checking if the place is added by the land owner or not
         SharedPreferences get_place = getActivity().getSharedPreferences(IS_LAND_ADDED, Context.MODE_PRIVATE);
@@ -261,6 +263,8 @@ public class frag_land_owner extends Fragment {
         // 2->final_address
         // 3->is_active
 
+        my_number.setText(user_phone_number);
+
         String[] split = user_address.split("\\#");
         address.setText(split[2]);
 
@@ -403,6 +407,9 @@ public class frag_land_owner extends Fragment {
             6) time end
             7) booking_guy_phone_number(key)
          */
+
+        //hiding swipe to diable location when booking is arrived
+        swipe.setVisibility(View.GONE);
 
         active_status.setText("Currently occupied");
 
