@@ -62,4 +62,6 @@
     <string name="total_hours">0\nHours</string>
     <string name="total_bookings">0\nBookings</string>
     <string name="total_earned">0\nEarned</string>
+    <string name="add_remainder">Add remainder</string>
+    <string name="add_remainders">Add Remainder</string>
 </resources>

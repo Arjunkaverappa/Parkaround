@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -29,7 +28,8 @@ public class frag_services extends Fragment {
         Intent in = new Intent(getActivity(), service_activity.class);
         fuel_card.setOnClickListener(v1 -> {
             //redirecting
-            Toast.makeText(getActivity(), "coming soon", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getActivity(), fuel_prices.class));
+            Animatoo.animateZoom(getActivity());
         });
 
         traffic_card.setOnClickListener(v1 -> {
@@ -41,12 +41,14 @@ public class frag_services extends Fragment {
 
         remainder_card.setOnClickListener(v1 -> {
             //redirecting
-            Toast.makeText(getActivity(), "coming soon", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getActivity(), remainder.class));
+            Animatoo.animateZoom(getActivity());
         });
 
         emission_card.setOnClickListener(v1 -> {
             //redirecting
-            Toast.makeText(getActivity(), "coming soon", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getActivity(), emission.class));
+            Animatoo.animateZoom(getContext());
         });
 
         return v;

@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         //checking if the user has reached the parking spot
         SharedPreferences getparking = getSharedPreferences(IS_PARKING, MODE_PRIVATE);
-        if (getparking.getBoolean("is_parking", true)) {
+        if (getparking.getBoolean("is_parking", false)) {
             go_to_parking_activity();
         }
 
